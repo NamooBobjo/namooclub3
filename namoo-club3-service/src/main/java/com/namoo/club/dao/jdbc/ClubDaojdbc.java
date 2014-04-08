@@ -8,9 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.namoo.club.dao.ClubDao;
-import com.namoo.club.domain.entity.Category;
 import com.namoo.club.domain.entity.Club;
-import com.namoo.club.domain.entity.Community;
 
 public class ClubDaojdbc implements ClubDao {
 
@@ -20,7 +18,7 @@ public class ClubDaojdbc implements ClubDao {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;
-		List<Club> clubs=null;
+		List<Club> clubs = new ArrayList<>();
 		
 		try {
 			conn = DbConnection.getConnection();
@@ -38,7 +36,7 @@ public class ClubDaojdbc implements ClubDao {
 				String description = resultSet.getString("clDescription");
 				
 				Club club = new Club(cmid, id, cgId, clubName, description);
-				clubs.add(club);				
+				clubs.add(club);
 			}
 			
 			
@@ -97,6 +95,8 @@ public class ClubDaojdbc implements ClubDao {
 			conn = DbConnection.getConnection();
 			String sql = "INSERT INTO club ( cmId, cgId, clName, clDescription, clDate) VALUES (?,?,?,?, sysdate())";
 			pstmt = conn.prepareStatement(sql);
+			
+			System.out.println( Integer.parseInt(club.getCmid()) +" / " +club.getCgid());
 
 			pstmt.setInt(1, Integer.parseInt(club.getCmid()));
 			pstmt.setInt(2, club.getCgid());
@@ -141,7 +141,7 @@ public class ClubDaojdbc implements ClubDao {
 
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "UPDATE clid SET clName=?, clDescription=? WHERE clid=?";
+			String sql = "UPDATE club SET clName=?, clDescription=? WHERE clid=?";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1, club.getName());
@@ -149,6 +149,7 @@ public class ClubDaojdbc implements ClubDao {
 			pstmt.setInt(3, Integer.parseInt(club.getId()));
 
 			pstmt.executeUpdate();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {

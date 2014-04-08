@@ -61,6 +61,18 @@ public class Club  {
 		addMember(admin);
 		
 	}
+	public Club(int cmid, int id, int cgId, String clubName,String description) {
+		// TODO Auto-generated constructor stub
+		this.cmid = Integer.toString(cmid);
+		this.id = Integer.toString(id);
+		this.name = clubName;
+		this.description = description;
+		this.cgid = cgId;
+		
+		this.members = new ArrayList<ClubMember>();
+		this.openDate = new Date();
+	}
+
 
 	
 	@Deprecated
@@ -73,15 +85,7 @@ public class Club  {
 		setManager(admin);
 		addMember(admin);
 	}
-	public Club(int cmid, int id, int cgId, String clubName,String description) {
-		// TODO Auto-generated constructor stub
-		this.cmid = Integer.toString(cmid);
-		this.id = Integer.toString(id);
-		this.name = clubName;
-		this.description = description;
-		this.cgid = cgId;
-	}
-
+	
 	//--------------------------------------------------------------------------
 		// getter/setter
 	public String getCategory() {
