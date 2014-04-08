@@ -11,6 +11,9 @@ public class Club  {
 
 	private String cmid;
 	private String id;
+	private int cgid;
+	
+
 	private String name;
 	private String description;
 	private Date openDate;
@@ -70,6 +73,15 @@ public class Club  {
 		setManager(admin);
 		addMember(admin);
 	}
+	public Club(int cmid, int id, int cgId, String clubName,String description) {
+		// TODO Auto-generated constructor stub
+		this.cmid = Integer.toString(cmid);
+		this.id = Integer.toString(id);
+		this.name = clubName;
+		this.description = description;
+		this.cgid = cgId;
+	}
+
 	//--------------------------------------------------------------------------
 		// getter/setter
 	public String getCategory() {
@@ -118,7 +130,13 @@ public class Club  {
 	public void setOpenDate(Date openDate) {
 		this.openDate = openDate;
 	}
+	public int getCgid() {
+		return cgid;
+	}
 
+	public void setCgid(int cgid) {
+		this.cgid = cgid;
+	}
 
 	//--------------------------------------------------------------------------
 		// public methods
