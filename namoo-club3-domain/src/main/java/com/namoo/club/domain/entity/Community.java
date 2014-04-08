@@ -7,7 +7,7 @@ import java.util.List;
 public class Community  {
 
 	
-	private String id;
+	private int cmId;
 	private String name;
 	private String description;
 	private List<String> category;
@@ -27,9 +27,19 @@ public class Community  {
 	 * @param admin
 	 */
 	
-	public Community(String id, String communityName, String description, SocialPerson admin){
+	public Community(int id, String communityName, String description, Date date){
 		//
-		this.id = id;
+		this.cmId = id;
+		this.name = communityName;
+		this.description = description;
+		this.members = new ArrayList<CommunityMember>();
+		this.openDate = date;
+		this.clubs = new ArrayList<Club>();
+	}
+	
+	public Community(int id, String communityName, String description, SocialPerson admin){
+		//
+		this.cmId = id;
 		this.name = communityName;
 		this.description = description;
 		this.members = new ArrayList<CommunityMember>();
@@ -40,9 +50,9 @@ public class Community  {
 		addMember(admin);
 	}
 	
-	public Community(String id, String communityName, String description, SocialPerson admin, List<String> category){
+	public Community(int id, String communityName, String description, SocialPerson admin, List<String> category){
 		//
-		this.id = id;
+		this.cmId = id;
 		this.name = communityName;
 		this.description = description;
 		this.members = new ArrayList<CommunityMember>();
@@ -54,8 +64,8 @@ public class Community  {
 		addMember(admin);
 	}
 	
-	public String getId() {
-		return id;
+	public int getId() {
+		return cmId;
 	}	
 
 	@Deprecated

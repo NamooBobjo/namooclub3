@@ -7,9 +7,9 @@ import com.namoo.club.domain.entity.Community;
 public interface CommunityDao {
 
 	List<Community> readAllCommunity();
-	Community readCommunity(String cmId);
-	void createCommunity(Community community);
-	void deleteCommunity(String cmId);
+	Community readCommunity(int communityId);
+	int createCommunity(Community community);
+	void deleteCommunity(int cmId);
 	void updateCommunity(Community community);
 
 }
