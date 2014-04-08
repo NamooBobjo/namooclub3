@@ -6,9 +6,9 @@ import com.namoo.club.domain.entity.Category;
 
 public interface CommunityCategoryDao {
 
-	List<Category> readAllCategory(String cmId);
-	Category readCategory(String cmId, String cgId);
-	void deleteCategory(String cmId);
-	void createCategory(List<Category> category);
+	List<String> readAllCategory(int cmId);
+	String readCategory(int cmId, int cgId);
+	void deleteCategory(int cmId);
+	void createCategory(int cmId, List<String> category);
 	
 }

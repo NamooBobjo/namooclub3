@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.dbunit.IDatabaseTester;
@@ -16,26 +17,25 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.namoo.club.dao.CommunityCategoryDao;
 import com.namoo.club.dao.SocialPersonDao;
 import com.namoo.club.dao.factory.DaoFactory.DbType;
-import com.namoo.club.domain.entity.SocialPerson;
 
-public class SocialPersonDaojdbcTest {
-
-	private SocialPersonDao dao;
+public class CommunityCategoryDaojdbcTest {
+	private CommunityCategoryDao dao;
 	IDatabaseTester databaseTester;
 
+	
 	@Before
 	public void setUp() throws Exception {
-		dao = MariaDBDaoFactory.createFactory(DbType.MariaDB).getSocialPersonDao();
+		dao = MariaDBDaoFactory.createFactory(DbType.MariaDB).getCommunityCategoryDao();
 		prepareDatabaseTester();
 		databaseTester.setSetUpOperation(DatabaseOperation.REFRESH);
 		databaseTester.onSetup();
 	}
 
 	@After
-	public void tearDown() throws Exception {
-		dao.deletePerson("sss");
+	public void tearDown() throws Exception {		
 		databaseTester.setTearDownOperation(DatabaseOperation.DELETE);
 		databaseTester.onTearDown();
 	}
@@ -58,39 +58,42 @@ public class SocialPersonDaojdbcTest {
 	}
 
 	@Test
-	public void testReadAllPerson() {
+	public void testReadAllCategory() {
+		List<String> categories = dao.readAllCategory(1);
+		String baseball ="";
+		String volley ="";
+		for(String cate : categories){
+			if(cate.equals("야구")){
+				baseball = cate;
+			}
+			else if(cate.equals("배구")){
+				volley = cate;
+			}
+		}
 		
-		List<SocialPerson> persons = dao.readAllPerson();
-		int count = persons.size();
-		assertEquals(2, count);
+		assertEquals("야구", baseball);
+		assertEquals("배구", volley);
 	}
 
 	@Test
-	public void testReadPerson() {
-		dao.readPerson("ksy5350@nate.com");
+	public void testReadCategory() {
+		String category = dao.readCategory(1,9);
+		assertEquals("야구", category);
 	}
 
-	public void testCreatePerson() {
+	@Test
+	public void testDeleteCategory() {
+		dao.deleteCategory(1);
+	}
+
+	@Test
+	public void testCreateCategory() {
+		List<String> category = new ArrayList<>();
+		category.add("야구");
+		category.add("농구");
+		category.add("배구");
+		dao.createCategory(1, category);
 		
-		SocialPerson person = new SocialPerson("sss", "sss", "sss");
-		dao.createPerson(person);
-		assertEquals("sss", person.getName());
-	}
-
-	@Test
-	public void testDeletePerson() {
-		dao.readPerson("ksy5350@nate.com");
-	}
-
-	@Test
-	public void testUpdatePerson() {
-		SocialPerson person = new SocialPerson("sss", "sss", "sss");
-		dao.createPerson(person);
-		person = dao.readPerson("ksy5350@nate.com");
-		person.setName("ssss");
-		dao.updatePerson(person);
-		person = dao.readPerson("sss");
-		assertEquals("ssss", person.getName());
 	}
 
 }
