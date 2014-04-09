@@ -27,6 +27,18 @@ public class Community  {
 	 * @param admin
 	 */
 	
+	public Community(String communityName, String description, Date date, SocialPerson admin){
+		//
+		this.name = communityName;
+		this.description = description;
+		this.members = new ArrayList<CommunityMember>();
+		this.openDate = date;
+		this.clubs = new ArrayList<Club>();
+		
+		setManager(admin);
+		addMember(admin);
+	}
+	
 	public Community(int id, String communityName, String description, Date date){
 		//
 		this.cmId = id;
@@ -44,6 +56,19 @@ public class Community  {
 		this.description = description;
 		this.members = new ArrayList<CommunityMember>();
 		this.openDate = new Date();
+		this.clubs = new ArrayList<Club>();
+		
+		setManager(admin);
+		addMember(admin);
+	}
+	
+	public Community(String communityName, String description, SocialPerson admin, List<String> category){
+		//
+		this.name = communityName;
+		this.description = description;
+		this.members = new ArrayList<CommunityMember>();
+		this.openDate = new Date();
+		this.setCategory(category);
 		this.clubs = new ArrayList<Club>();
 		
 		setManager(admin);
