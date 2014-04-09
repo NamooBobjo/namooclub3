@@ -9,9 +9,6 @@ import java.util.Date;
 import java.util.List;
 
 import com.namoo.club.dao.CommunityDao;
-import com.namoo.club.dao.MemberDao;
-import com.namoo.club.dao.factory.DaoFactory;
-import com.namoo.club.dao.factory.DaoFactory.DbType;
 import com.namoo.club.domain.entity.Community;
 
 

@@ -93,16 +93,9 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 
 	@Override
-	public Community findCommunity(String communityName){
+	public Community findCommunity(int cmId){
 		//
-		Community findCm = null;
-		for(Community community : cmDao.readAllCommunity()){
-			if(community.getName().equals(communityName)){
-				findCm = cmDao.readCommunity(community.getId());
-			}
-		}
-		
-		return findCm;
+		return cmDao.readCommunity(cmId);
 	}
 	
 

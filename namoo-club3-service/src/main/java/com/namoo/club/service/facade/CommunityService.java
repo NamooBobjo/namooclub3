@@ -49,7 +49,7 @@ public interface CommunityService {
 	 * 
 	 * @param communityName
 	 */
-	public Community findCommunity(String communityName);
+	public Community findCommunity(int communityName);
 
 	/**
 	 * [주민으로 등록되지 않은 경우] 커뮤니티 가입
