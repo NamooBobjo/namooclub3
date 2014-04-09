@@ -5,6 +5,7 @@ import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.dbunit.IDatabaseTester;
 import org.dbunit.JdbcDatabaseTester;
@@ -57,19 +58,12 @@ public class MemberDaojdbcTest {
 		return dataset;
 	}
 
-	@Test
-	public void testFindCommunityMember() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testFindClubMember() {
-		fail("Not yet implemented");
-	}
 
 	@Test
 	public void testReadCommunityMember() {
-		fail("Not yet implemented");
+		
+		List<SocialPerson> test = dao.readCommunityMembers(1);
+		assertEquals(1, test.size());
 	}
 
 	@Test
@@ -79,32 +73,27 @@ public class MemberDaojdbcTest {
 
 	@Test
 	public void testJoinAsCommunityMember() {
-		SocialPerson person = new SocialPerson("sss", "sss", "sss");
+		SocialPerson person = new SocialPerson("yong", "yong@nate.com", "1234");
 		
-//		CommunityMember communityMember = new CommunityMember(1, person, "1");
-//		dao.joinAsCommunityMember(communityMember);
-//		
-//		assertEquals("sss", communityMember.getEmail());
+		dao.joinAsCommunityMember(1, 1, person);
+
 	}
 
 	@Test
 	public void testJoinAsClubMember() {
-		SocialPerson person = new SocialPerson("sss", "sss", "sss");
+		SocialPerson person = new SocialPerson("yong", "yong@nate.com", "1234");		
+		dao.joinAsClubMember(16, 0, person);
 		
-//		ClubMember clubMember = new ClubMember(1, person, "1", "1");
-//		dao.joinAsClubMember(clubMember);
-//		
-//		assertEquals("sss", clubMember.getEmail());
 	}
 
 	@Test
 	public void testDeleteCommunityMember() {
-		fail("Not yet implemented");
+		dao.deleteCommunityMember(1, "yong@nate.com");
 	}
 
 	@Test
 	public void testDeleteClubMember() {
-		fail("Not yet implemented");
+		dao.deleteClubMember(16, "yong@nate.com");
 	}
 
 	@Test

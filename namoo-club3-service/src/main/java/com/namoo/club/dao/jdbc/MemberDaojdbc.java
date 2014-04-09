@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.namoo.club.dao.MemberDao;
+import com.namoo.club.dao.SocialPersonDao;
+import com.namoo.club.dao.factory.DaoFactory.DbType;
 import com.namoo.club.domain.entity.ClubMember;
 import com.namoo.club.domain.entity.Community;
 import com.namoo.club.domain.entity.CommunityMember;
@@ -16,60 +18,54 @@ import com.namoo.club.domain.entity.SocialPerson;
 public class MemberDaojdbc implements MemberDao {
 
 	@Override
-	public List<CommunityMember> findCommunityMember(String kind, String cmId) {
+	public List<SocialPerson> readCommunityMembers(int cmId) {
 		//
 		Connection conn = null;
 		ResultSet resultSet = null;
 		PreparedStatement pstmt = null;
-		List<CommunityMember> communityMembers = null;
+		List<SocialPerson> communityMembers = new ArrayList<>();
+		
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "SELECT email, id, kind, mainManager FROM member WHERE kind = ? and id = ?";
-			communityMembers = new ArrayList<>();
+			String sql = "SELECT email, id, kind, mainManager FROM member WHERE kind = 1 and id = ?";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, kind);
-			pstmt.setString(2, cmId);
+			
+			pstmt.setInt(1, cmId);
 			resultSet = pstmt.executeQuery();
 			
 			if(resultSet.next()){
 				String email = resultSet.getString("email");
-				int id = resultSet.getInt("id");
-				String mainManager = resultSet.getString("mainManager");
-				
-//				SocialPerson rolePerson = new SocialPerson();
-//				Community community = new Community(id, communityName, description, date);
-//				
-//				CommunityMember communityMember = new CommunityMember(id, rolePerson);
-//				communityMembers.add(communityMember);
+				SocialPerson person = findPerson(email);
+				communityMembers.add(person);
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			if(resultSet != null)
-				try { resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			quiet(resultSet, pstmt, conn);
 		}
 		return communityMembers;
 	}
 	
+	public SocialPerson findPerson(String email){
+				
+		SocialPersonDao dao = MariaDBDaoFactory.createFactory(DbType.MariaDB).getSocialPersonDao();
+		SocialPerson person = dao.readPerson(email);
+		
+		return person;
+	}
 	@Override
-	public List<ClubMember> findClubMember(String kind, String clId) {
-		//
+	public List<SocialPerson> readAllClubMember(int clId) {
+		
 		Connection conn = null;
 		ResultSet resultSet = null;
 		PreparedStatement pstmt = null;
-		List<ClubMember> clubMembers = null;
+		List<SocialPerson> clubMembers = null;
 		try {
 			conn = DbConnection.getConnection();
 			String sql = "SELECT email, id, kind, mainManager, manager FROM member WHERE kind = ? and id = ?";
 			clubMembers = new ArrayList<>();
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, kind);
-			pstmt.setString(2, clId);
 			resultSet = pstmt.executeQuery();
 			
 			if(resultSet.next()){
@@ -80,226 +76,103 @@ public class MemberDaojdbc implements MemberDao {
 				
 				SocialPerson rolePerson = new SocialPerson();
 				
-//				ClubMember clubMember = new ClubMember(id, rolePerson, mainManager, manager);
-//				clubMembers.add(clubMember);
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			if(resultSet != null)
-				try { resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			quiet(resultSet, pstmt, conn);
 		}
 		return clubMembers;
 	}
 
-	@Override
-	public CommunityMember readCommunityMember(String kind, String cmId, String email) {
-		//
-		Connection conn = null;
-		ResultSet resultSet = null;
-		PreparedStatement pstmt = null;
-		CommunityMember communityMember = null;
-		try {
-			conn = DbConnection.getConnection();
-			String sql = "SELECT email, id, kind, mainManager FROM member WHERE kind = ? and id = ? and email = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, kind);
-			pstmt.setString(2, cmId);
-			pstmt.setString(3, email);
-			resultSet = pstmt.executeQuery();
-			
-			if(resultSet.next()){
-				String userEmail = resultSet.getString("email");
-				int id = resultSet.getInt("id");
-				String mainManager = resultSet.getString("mainManager");
-				
-				SocialPerson rolePerson = new SocialPerson();
-				
-//				communityMember = new CommunityMember(id, rolePerson, mainManager);
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally{
-			if(resultSet != null)
-				try { resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-		}
-		return communityMember;
-	}
-	
-	@Override
-	public ClubMember readClubMember(String kind, String clId, String email) {
-		//
-		Connection conn = null;
-		ResultSet resultSet = null;
-		PreparedStatement pstmt = null;
-		ClubMember clubMember = null;
-		try {
-			conn = DbConnection.getConnection();
-			String sql = "SELECT email, id, kind, mainManager, manager FROM member WHERE kind = ? and id = ? and email = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, kind);
-			pstmt.setString(2, clId);	
-			pstmt.setString(3, email);
-			resultSet = pstmt.executeQuery();
-			
-			if(resultSet.next()){
-				String userEmail = resultSet.getString("email");
-				int id = resultSet.getInt("id");
-				String mainManager = resultSet.getString("mainManager");
-				String manager = resultSet.getString("manager");
-				
-				SocialPerson rolePerson = new SocialPerson();
-				
-//				clubMember = new ClubMember(id, rolePerson, mainManager, manager);
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally{
-			if(resultSet != null)
-				try { resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-		}
-		return clubMember;
-	}
+
 
 	@Override
-	public void joinAsCommunityMember(CommunityMember communityMember) {
+	public void joinAsCommunityMember(int cmId, int mainManager, SocialPerson person) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "INSERT INTO member(email, id, kind, mainManager) VALUES(?,?,1,?)";
+			String sql = "INSERT INTO member(email, id, kind, mainManager,manager) VALUES(?,?,'1',?,0)";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, communityMember.getEmail());
-//			pstmt.setInt(2, communityMember.getCommunityId());
-//			pstmt.setString(3, communityMember.getMainManager());
+			pstmt.setString(1, person.getEmail());
+			pstmt.setInt(2, cmId);
+			pstmt.setInt(3, mainManager);
 			
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			quiet(pstmt, conn);
 		}
 	}
 
 	@Override
-	public void joinAsClubMember(ClubMember clubMember) {
+	public void joinAsClubMember(int clId, int mainManager, SocialPerson person) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
+		
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "INSERT INTO member(email, id, kind, mainManager, manager) VALUES(?,?,2,?,?)";
+			String sql = "INSERT INTO member(email, id, kind, mainManager, manager) VALUES(?,?,2,?,0)";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, clubMember.getEmail());
-//			pstmt.setInt(2, clubMember.getClubId());
-//			pstmt.setString(3, clubMember.getMainManager());
-//			pstmt.setString(4, clubMember.getManager());
-			
+			pstmt.setString(1, person.getEmail());
+			pstmt.setInt(2, clId);
+			pstmt.setInt(3, mainManager);
+				
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			quiet(pstmt, conn);
 		}
 	}
 
 	@Override
-	public void deleteCommunityMember(String email) {
+	public void deleteCommunityMember(int cmId, String email) {
 		//
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "DELETE FROM member WHERE email = ? and kind = 1";
+			String sql = "DELETE FROM member WHERE email = ? AND kind = 1 AND id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
-			
 			pstmt.setString(1, email);
+			pstmt.setInt(2, cmId);			
+			pstmt.executeQuery();
 			
-			int count = pstmt.executeUpdate();
-			System.out.println(count);
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			quiet(pstmt, conn);
 		}
 	}
 	
 	@Override
-	public void deleteClubMember(String kind, String email) {
+	public void deleteClubMember(int clId, String email) {
 		//
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "DELETE FROM member WHERE email = ? and kind = ?";
+			String sql = "DELETE FROM member WHERE email = ? AND kind = 2 AND id = ?";
 			
-			pstmt = conn.prepareStatement(sql);
-			
+			pstmt = conn.prepareStatement(sql);			
 			pstmt.setString(1, email);
-			pstmt.setString(2, kind);
+			pstmt.setInt(2, clId);
 			
-			int count = pstmt.executeUpdate();
-			System.out.println(count);
+			pstmt.executeQuery();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			quiet(pstmt, conn);
 		}
 	}
 
-	@Override
-	public void updateCommunityMember(CommunityMember communityMember) {
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		try {
-			conn = DbConnection.getConnection();
-			String sql = "UPDATE member SET mainManager = ? WHERE kind = 1 and id = ? and  email = ? ";
-			pstmt = conn.prepareStatement(sql);
-			
-//			pstmt.setString(1, communityMember.getMainManager());
-//			pstmt.setInt(2, communityMember.getCommunityId());
-//			pstmt.setString(3, communityMember.getEmail());
-			
-			pstmt.executeUpdate();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}finally{
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-		}
-	}
 
 	@Override
 	public void updateClubMember(ClubMember clubMember) {
@@ -320,10 +193,28 @@ public class MemberDaojdbc implements MemberDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			quiet(pstmt, conn);
+			}
+	}
+	
+	
+	//소멸 메소드
+	private void quiet(ResultSet resultSet, PreparedStatement pstmt, Connection conn) {
+		if(resultSet!=null){
+			try {resultSet.close();} catch (SQLException e) {e.printStackTrace();}
 		}
+		quiet(pstmt,conn);
+	}
+	
+	private void quiet(PreparedStatement pstmt, Connection conn) {
+	
+		if(pstmt !=null){	
+			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
+		}
+		
+		if(conn!=null){
+			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
+		}	
 	}
 }
+
