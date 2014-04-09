@@ -86,6 +86,20 @@ public class Club  {
 		addMember(admin);
 	}
 	
+	public Club(int cmid, String category, String clubName,String description, SocialPerson admin) {
+
+		this.cmid=Integer.toString(cmid);
+		
+		this.name = clubName;
+		this.description= description;
+		this.members = new ArrayList<ClubMember>();
+		this.openDate = new Date();
+		this.category = category;
+		
+		setManager(admin);
+		addMember(admin);
+	}
+
 	//--------------------------------------------------------------------------
 		// getter/setter
 	public String getCategory() {

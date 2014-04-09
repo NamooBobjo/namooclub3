@@ -24,7 +24,12 @@
         <groupId>javax.servlet</groupId>
         <artifactId>jstl</artifactId>
         <version>1.2</version>
-    </dependency> 
+    </dependency>
+    <dependency>
+    	<groupId>com.namoo</groupId>
+    	<artifactId>namoo-club3-service</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
   <build>
     <finalName>namoo-club3-web</finalName>

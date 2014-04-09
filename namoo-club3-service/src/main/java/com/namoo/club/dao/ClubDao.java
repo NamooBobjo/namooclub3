@@ -6,8 +6,10 @@ import com.namoo.club.domain.entity.Club;
 
 public interface ClubDao {
 	
+	List<Club> readAllClub();
 	List<Club> readAllClub(int cmid);
 	Club readClub(int clid);
+    Club readClubByName(String clName);
 	void createClub(Club club);
 	void deleteClub(int clid);
 	void updateClub(Club club);

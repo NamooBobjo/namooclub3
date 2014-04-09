@@ -187,4 +187,74 @@ public class ClubDaojdbc implements ClubDao {
 			}
 		}
 	}
+
+	@Override
+	public Club readClubByName(String clName) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+
+		Club club = null;
+
+		try {
+			conn = DbConnection.getConnection();
+			String sql = "SELECT clid, cmId, cgId, clName, clDescription, clDate FROM club WHERE clName =?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, clName);
+			resultSet = pstmt.executeQuery();
+
+			while (resultSet.next()) {
+				int clId = resultSet.getInt("clid");
+				int cmId = resultSet.getInt("cmId");
+				int cgId = resultSet.getInt("cgId");
+				String clubName = resultSet.getString("clName");
+				String clDescription = resultSet.getString("clDescription");
+
+				club = new Club(cmId, clId, cgId, clubName, clDescription);				
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			quiet(resultSet, pstmt, conn);
+		}
+		return club;
+	}
+
+	@Override
+	public List<Club> readAllClub() {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet resultSet = null;
+		List<Club> clubs = new ArrayList<>();
+		
+		try {
+			conn = DbConnection.getConnection();
+			String sql = "SELECT clid, cmId, cgId, clName, clDescription, clDate FROM club";
+			pstmt = conn.prepareStatement(sql);
+				
+			resultSet = pstmt.executeQuery();
+			
+			while(resultSet.next()){
+				int cmid = resultSet.getInt("cmId");
+				int id = resultSet.getInt("clid");
+				int cgId = resultSet.getInt("cgId");
+				String clubName = resultSet.getString("clName");
+				String description = resultSet.getString("clDescription");
+				
+				Club club = new Club(cmid, id, cgId, clubName, description);
+				clubs.add(club);
+			}
+			
+			
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			quiet(resultSet, pstmt, conn);
+		}
+		
+		return clubs;
+	}
 }

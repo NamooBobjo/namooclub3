@@ -8,11 +8,7 @@ import com.namoo.club.domain.entity.ClubMember;
 
 public interface ClubService {
 	
-	/**
-	 * [주민으로 등록되지 않은 경우] 클럽 개설
-	 */
-	public void registClub(String cmId, String clubName, String description,
-			String adminName, String email, String password);
+	
 
 	/**
 	 * [주민으로 등록된 경우] 클럽 개설

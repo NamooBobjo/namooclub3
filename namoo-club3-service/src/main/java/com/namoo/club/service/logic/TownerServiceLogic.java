@@ -2,23 +2,29 @@ package com.namoo.club.service.logic;
 
 import java.util.List;
 
+import com.namoo.club.dao.CommunityDao;
+import com.namoo.club.dao.SocialPersonDao;
+import com.namoo.club.dao.factory.DaoFactory;
+import com.namoo.club.dao.factory.DaoFactory.DbType;
 import com.namoo.club.domain.entity.Community;
 import com.namoo.club.domain.entity.SocialPerson;
 import com.namoo.club.service.facade.TownerService;
 import com.namoo.club.service.logic.exception.NamooRuntimeException;
-/*
+
 public class TownerServiceLogic implements TownerService {
 
-	private EntityManager em;
+	private SocialPersonDao dao;
+	private CommunityDao comdao;
 	
 	public TownerServiceLogic() {
-		this.em = EntityManager.getInstance();
+		dao = DaoFactory.createFactory(DbType.MariaDB).getSocialPersonDao();
+		comdao = DaoFactory.createFactory(DbType.MariaDB).getCommunityDao();
 	}
 	
 	@Override
 	public boolean loginAsTowner(String email, String password) {
 		// 
-		SocialPerson towner = em.find(SocialPerson.class, email);
+		SocialPerson towner = dao.readPerson(email);								
 		if (towner != null && towner.getPassword().equals(password)) {
 			return true;
 		}
@@ -29,19 +35,19 @@ public class TownerServiceLogic implements TownerService {
 	@Override
 	public void registTowner(String name, String email, String password) {
 		// 
-		if (em.find(SocialPerson.class, email) != null) {
+		if (dao.readPerson(email) != null) {
 			throw new RuntimeException("해당 주민이 이미 존재합니다. 등록할 수 없습니다.");
 		}
 		
 		SocialPerson towner = new SocialPerson(name, email, password);
-		em.store(towner);
+		dao.createPerson(towner);
 	}
 
 	@Override
 	public void removeTowner(String email) {
 		// 
 		// 커뮤니티의 회원으로 가입된 경우 삭제하지 못한다.
-		List<Community> communities = em.findAll(Community.class);
+		List<Community> communities = comdao.readAllCommunity();
 		if (communities != null) {
 			for (Community community : communities) {
 				if (community.findMember(email) != null) {
@@ -51,19 +57,18 @@ public class TownerServiceLogic implements TownerService {
 			}
 		}
 		
-		em.remove(SocialPerson.class, email);
+		dao.deletePerson(email);
 	}
 
 	@Override
 	public SocialPerson findTowner(String email) {
 		//
-		return em.find(SocialPerson.class, email);
+		return dao.readPerson(email);
 	}
 
 	@Override
 	public List<SocialPerson> findAllTowner() {
 		// 
-		return em.findAll(SocialPerson.class);
+		return dao.readAllPerson();
 	}
 }
-*/
