@@ -3,6 +3,9 @@ package com.namoo.club.service.logic;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.namoo.club.dao.ClubDao;
+import com.namoo.club.dao.factory.DaoFactory;
+import com.namoo.club.dao.factory.DaoFactory.DbType;
 import com.namoo.club.domain.entity.Club;
 import com.namoo.club.domain.entity.ClubMember;
 import com.namoo.club.domain.entity.Community;
@@ -13,19 +16,20 @@ import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 /*
 public class ClubServiceLogic implements ClubService {
 
-	private EntityManager em;
-	CommunityService cmservice = NamooClubServiceFactory.getInstance().getCommunityService();
-	
+	private ClubDao clubdao; 
+			
 	public ClubServiceLogic() {
 		//
-		em = EntityManager.getInstance();
+		clubdao = DaoFactory.createFactory(DbType. MariaDB).getClubDao();
+		
 	}
+			
 	
 	@Override
 	public void registClub(String cmId, String clubName, String description,
 			String adminName, String email, String password) {
 		//
-		if (em.find(Club.class, clubName) != null) {
+		if (isExistClubByName(cmId, clubName)) {
 			throw NamooExceptionFactory.createRuntime("이미 존재하는 클럽입니다.");
 		}
 		
@@ -46,6 +50,19 @@ public class ClubServiceLogic implements ClubService {
 		em.store(club);
 		em.store(community);
 	}
+
+	private boolean isExistClubByName(String cmId, String clubName) {
+		// 
+		int id = Integer.parseInt(cmId);
+		List<Club> clubs = clubdao.readAllClub(id);
+		for(Club club : clubs){
+			if(club.getName().equals(clubName)){
+				return true;
+			}
+		}		
+		return false;
+	}
+
 
 	private SocialPerson createPerson(String name, String email,
 			String password) {
@@ -234,4 +251,5 @@ public class ClubServiceLogic implements ClubService {
 		club.removeMember(email);
 		em.store(club);
 	}
-}*/
+}
+*/
