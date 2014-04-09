@@ -37,22 +37,29 @@ public class CommunityListController extends HttpServlet{
 		CommunityService service = NamooClubServiceFactory.getInstance().getCommunityService();
 		TownerService townerservice = NamooClubServiceFactory.getInstance().getTownerService();
 		HttpSession session = req.getSession();
+		
+		
+		List<Community> belongCommunities = null;
+		List<Community> communities = null;
+		List<Community> managedCommunities = null;
 			
 		String loginID = (String) session.getAttribute("loginID");
-		
-		List<Community> belongCommunities = service.findBelongCommunities(loginID);
-		List<Community> communities =service.findAllCommunities();
-		List<Community> managedCommunities = service.findManagedCommnities(loginID);
-		
-		
-		for(Community community : belongCommunities){
-			communities.remove(community);
+		if(!service.findBelongCommunities(loginID).isEmpty() &&!service.findAllCommunities().isEmpty() && !service.findManagedCommnities(loginID).isEmpty() ){
+			belongCommunities = service.findBelongCommunities(loginID);	
+			communities = service.findAllCommunities();
+			managedCommunities = service.findManagedCommnities(loginID);
+			
+			for(Community community : belongCommunities){
+				communities.remove(community);
+			}			
+			
+			for(Community community : managedCommunities){
+				belongCommunities.remove(community);
+			}
+
 		}
 		
-		for(Community community : managedCommunities){
-			belongCommunities.remove(community);
-		}
-				
+		
 		String loginUser = townerservice.findTowner(loginID).getName();
 		
 		req.setAttribute("loginUser", loginUser);
