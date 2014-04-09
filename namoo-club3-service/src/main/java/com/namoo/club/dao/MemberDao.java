@@ -2,23 +2,24 @@ package com.namoo.club.dao;
 
 import java.util.List;
 
-import com.namoo.club.domain.entity.SocialPerson;
+import com.namoo.club.domain.entity.ClubMember;
+import com.namoo.club.domain.entity.CommunityMember;
 
 public interface MemberDao {
 
-	List<SocialPerson> findCommunityMember(String kind, String cmId);
-	List<SocialPerson> findClubMember(String kind, String clId);
+	List<CommunityMember> findCommunityMember(String kind, String cmId);
+	List<ClubMember> findClubMember(String kind, String clId);
 
-	SocialPerson readCommunityMember(String kind, String cmId, String email);
-	SocialPerson readClubMember(String kind, String clId, String email);
+	CommunityMember readCommunityMember(String kind, String cmId, String email);
+	ClubMember readClubMember(String kind, String clId, String email);
 
-	void joinAsCommunityMember(String kind, String cmId, String mainManager);
-	void joinAsClubMember(String kind, String cmId, String mainManager, String manager);
+	void joinAsCommunityMember(CommunityMember communityMember);
+	void joinAsClubMember(ClubMember clubMember);
 
 	void deleteCommunityMember(String email);
 	void deleteClubMember(String kind, String email);
 
-	void updateCommunityMember(String kind, String email, String mainManager);
-	void updateClubMember(String kind, String email, String mainManager, String manager);
+	void updateCommunityMember(CommunityMember communityMember);
+	void updateClubMember(ClubMember clubMember);
 
 }
