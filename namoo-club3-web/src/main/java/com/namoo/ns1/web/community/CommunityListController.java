@@ -44,19 +44,30 @@ public class CommunityListController extends HttpServlet{
 		List<Community> managedCommunities = null;
 			
 		String loginID = (String) session.getAttribute("loginID");
-		if(!service.findBelongCommunities(loginID).isEmpty() &&!service.findAllCommunities().isEmpty() && !service.findManagedCommnities(loginID).isEmpty() ){
-			belongCommunities = service.findBelongCommunities(loginID);	
+		
+	
+		if(!service.findAllCommunities().isEmpty()){
 			communities = service.findAllCommunities();
-			managedCommunities = service.findManagedCommnities(loginID);
-			
+		}		
+		
+		if(!service.findBelongCommunities(loginID).isEmpty()){
+			belongCommunities = service.findBelongCommunities(loginID);	
 			for(Community community : belongCommunities){
 				communities.remove(community);
-			}			
+			}	
+		}		
+		
+		
+		if(!service.findManagedCommnities(loginID).isEmpty()){
+			managedCommunities = service.findManagedCommnities(loginID);
 			
+			if(!service.findBelongCommunities(loginID).isEmpty()){
 			for(Community community : managedCommunities){
 				belongCommunities.remove(community);
 			}
-
+			}
+			
+			req.setAttribute("managedCommunities", managedCommunities);
 		}
 		
 		
@@ -64,7 +75,7 @@ public class CommunityListController extends HttpServlet{
 		
 		req.setAttribute("loginUser", loginUser);
 		req.setAttribute("communities", communities);
-		req.setAttribute("managedCommunities", managedCommunities);
+		
 		req.setAttribute("belongCommunities", belongCommunities);
 		
 		dispatcher.forward(req, resp);

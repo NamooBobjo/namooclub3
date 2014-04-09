@@ -9,6 +9,9 @@ import java.util.Date;
 import java.util.List;
 
 import com.namoo.club.dao.CommunityDao;
+import com.namoo.club.dao.MemberDao;
+import com.namoo.club.dao.factory.DaoFactory;
+import com.namoo.club.dao.factory.DaoFactory.DbType;
 import com.namoo.club.domain.entity.Community;
 
 
@@ -77,12 +80,36 @@ public class CommunityDaojdbc implements CommunityDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			if(resultSet != null)
-				try { resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			quiet(resultSet, pstmt, conn);
+		}
+		return community;
+	}
+	
+	@Override
+	public Community readCommunity(String cmName) {
+		Connection conn = null;
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		Community community = null;
+		try {
+			conn = DbConnection.getConnection();
+			String sql = "SELECT cmId, cmName, cmDescription, cmDate FROM community WHERE cmName = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, cmName);
+			resultSet = pstmt.executeQuery();
+			
+			if (resultSet.next()){
+				int cmId = resultSet.getInt("cmId");
+				String cmDescription = resultSet.getString("cmDescription");
+				Date cmDate = resultSet.getDate("cmDate");
+				
+				community = new Community(cmId, cmName, cmDescription, cmDate);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			quiet(resultSet, pstmt, conn);
 		}
 		return community;
 	}
@@ -110,12 +137,7 @@ public class CommunityDaojdbc implements CommunityDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(result != null)
-				try { result.close(); } catch (SQLException e) { e.printStackTrace(); }
+			quiet(result, pstmt, conn);
 		}
 		return cmId;
 	}
@@ -171,4 +193,38 @@ public class CommunityDaojdbc implements CommunityDao {
 				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
 		}
 	}
+
+		// 소멸 메소드
+		private void quiet(ResultSet resultSet, PreparedStatement pstmt,
+				Connection conn) {
+			if (resultSet != null) {
+				try {
+					resultSet.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			quiet(pstmt, conn);
+		}
+
+		private void quiet(PreparedStatement pstmt, Connection conn) {
+
+			if (pstmt != null) {
+				try {
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+
+			if (conn != null) {
+				try {
+					conn.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+	
 }

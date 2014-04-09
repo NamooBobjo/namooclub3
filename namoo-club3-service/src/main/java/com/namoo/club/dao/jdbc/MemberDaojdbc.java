@@ -30,7 +30,7 @@ public class MemberDaojdbc implements MemberDao {
 			pstmt.setInt(1, cmId);
 			resultSet = pstmt.executeQuery();
 			
-			if(resultSet.next()){
+			while(resultSet.next()){
 				String email = resultSet.getString("email");
 				SocialPerson person = findPerson(email);
 				communityMembers.add(person);
@@ -43,7 +43,35 @@ public class MemberDaojdbc implements MemberDao {
 		}
 		return communityMembers;
 	}
-	
+
+	@Override
+	public List<Integer> readManagedid(String email) {
+		
+		Connection conn = null;
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		List<Integer> idList = new ArrayList<>();
+		
+		try {
+			conn = DbConnection.getConnection();
+			String sql = "SELECT email, id, kind, mainManager FROM member WHERE kind = 1 AND mainManager = 1 AND email = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setString(1, email);
+			resultSet = pstmt.executeQuery();
+			
+			while(resultSet.next()){
+				int id = resultSet.getInt("id");
+				idList.add(id);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			quiet(resultSet, pstmt, conn);
+		}
+		return idList;
+	}
 	public SocialPerson findPerson(String email){
 				
 		SocialPersonDao dao = MariaDBDaoFactory.createFactory(DbType.MariaDB).getSocialPersonDao();
@@ -66,7 +94,7 @@ public class MemberDaojdbc implements MemberDao {
 			pstmt.setInt(1, clId);
 			resultSet = pstmt.executeQuery();
 			
-			if(resultSet.next()){
+			while(resultSet.next()){
 				String email = resultSet.getString("email");
 				SocialPerson person = findPerson(email);
 				clubMembers.add(person);
@@ -209,5 +237,6 @@ public class MemberDaojdbc implements MemberDao {
 			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
 		}	
 	}
+
 }
 

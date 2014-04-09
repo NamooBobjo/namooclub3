@@ -80,6 +80,8 @@ public class CommunityServiceLogic implements CommunityService {
 		Community community = new Community(communityName, description, towner, category);
 		
 		cmDao.createCommunity(community);
+		Community com = cmDao.readCommunity(communityName);
+		mbDao.joinAsCommunityMember(com.getId(), 1, towner);
 	}
 
 	private SocialPerson createPerson(String name, String email, String password) {
@@ -244,16 +246,14 @@ public class CommunityServiceLogic implements CommunityService {
 	@Override
 	public List<Community> findManagedCommnities(String email) {
 		// 
-		List<Community> commnities = cmDao.readAllCommunity();
-		if (commnities == null) return null;
-		
-		List<Community> manages = new ArrayList<>();
-		for (Community community : commnities) {
-			if (community.getManager().getEmail().equals(email)) {
-				manages.add(community);
-			}
+		List<Community> communities =  new ArrayList<>();
+		List<Integer> idList = mbDao.readManagedid(email);
+		for(int i : idList){
+			Community community = cmDao.readCommunity(i);
+			communities.add(community);
 		}
-		return manages;
+		
+		return communities;
 	}
 
 	@Override

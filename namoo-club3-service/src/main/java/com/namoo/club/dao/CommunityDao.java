@@ -8,6 +8,8 @@ public interface CommunityDao {
 
 	List<Community> readAllCommunity();
 	Community readCommunity(int communityId);
+	Community readCommunity(String cmName);
+	
 	int createCommunity(Community community);
 	void deleteCommunity(int cmId);
 	void updateCommunity(Community community);

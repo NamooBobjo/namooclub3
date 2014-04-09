@@ -8,10 +8,14 @@ public interface MemberDao {
 
 	List<SocialPerson> readCommunityMembers(int cmId);
 	List<SocialPerson> readClubMembers(int clId);
+	
+	List<Integer> readManagedid(String email);
 		
 	void joinAsCommunityMember(int cmid, int mainManager,SocialPerson person);
 	void joinAsClubMember(int clid, int mainManager, SocialPerson person);
 
+	
+	
 	void deleteCommunityMember(int cmId, String email);
 	void deleteClubMember(int clId, String email);
 
