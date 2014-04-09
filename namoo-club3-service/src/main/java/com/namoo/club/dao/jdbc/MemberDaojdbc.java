@@ -10,9 +10,6 @@ import java.util.List;
 import com.namoo.club.dao.MemberDao;
 import com.namoo.club.dao.SocialPersonDao;
 import com.namoo.club.dao.factory.DaoFactory.DbType;
-import com.namoo.club.domain.entity.ClubMember;
-import com.namoo.club.domain.entity.Community;
-import com.namoo.club.domain.entity.CommunityMember;
 import com.namoo.club.domain.entity.SocialPerson;
 
 public class MemberDaojdbc implements MemberDao {
@@ -55,27 +52,24 @@ public class MemberDaojdbc implements MemberDao {
 		return person;
 	}
 	@Override
-	public List<SocialPerson> readAllClubMember(int clId) {
+	public List<SocialPerson> readClubMembers(int clId) {
 		
 		Connection conn = null;
 		ResultSet resultSet = null;
 		PreparedStatement pstmt = null;
-		List<SocialPerson> clubMembers = null;
+		List<SocialPerson> clubMembers = new ArrayList<>();
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "SELECT email, id, kind, mainManager, manager FROM member WHERE kind = ? and id = ?";
-			clubMembers = new ArrayList<>();
+			String sql = "SELECT email, id, kind, mainManager, manager FROM member WHERE kind = 2 AND id = ?";
 			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, clId);
 			resultSet = pstmt.executeQuery();
 			
 			if(resultSet.next()){
 				String email = resultSet.getString("email");
-				int id = resultSet.getInt("id");
-				String mainManager = resultSet.getString("mainManager");
-				String manager = resultSet.getString("manager");
-				
-				SocialPerson rolePerson = new SocialPerson();
-				
+				SocialPerson person = findPerson(email);
+				clubMembers.add(person);
 			}
 			
 		} catch (SQLException e) {
@@ -175,18 +169,17 @@ public class MemberDaojdbc implements MemberDao {
 
 
 	@Override
-	public void updateClubMember(ClubMember clubMember) {
+	public void updateClubMember(int clId, String email, int manager) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "UPDATE member SET mainManager = ?, manager = ? WHERE kind = 2 and id = ? and  email = ? ";
+			String sql = "UPDATE member SET manager = ? WHERE kind = 2 AND id = ? AND email = ? ";
 			pstmt = conn.prepareStatement(sql);
 			
-//			pstmt.setString(1, clubMember.getMainManager());
-//			pstmt.setString(2, clubMember.getManager());
-//			pstmt.setInt(3, clubMember.getClubId());
-			pstmt.setString(4, clubMember.getEmail());
+			pstmt.setInt(1, manager);
+			pstmt.setInt(2, clId);
+			pstmt.setString(3, email);
 			
 			pstmt.executeUpdate();
 			
@@ -194,7 +187,7 @@ public class MemberDaojdbc implements MemberDao {
 			e.printStackTrace();
 		}finally{
 			quiet(pstmt, conn);
-			}
+		}
 	}
 	
 	

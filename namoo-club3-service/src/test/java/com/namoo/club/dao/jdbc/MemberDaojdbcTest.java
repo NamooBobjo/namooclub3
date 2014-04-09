@@ -1,7 +1,6 @@
 package com.namoo.club.dao.jdbc;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,8 +18,6 @@ import org.junit.Test;
 
 import com.namoo.club.dao.MemberDao;
 import com.namoo.club.dao.factory.DaoFactory.DbType;
-import com.namoo.club.domain.entity.ClubMember;
-import com.namoo.club.domain.entity.CommunityMember;
 import com.namoo.club.domain.entity.SocialPerson;
 
 public class MemberDaojdbcTest {
@@ -68,7 +65,8 @@ public class MemberDaojdbcTest {
 
 	@Test
 	public void testReadClubMember() {
-		fail("Not yet implemented");
+		List<SocialPerson> test = dao.readClubMembers(16);
+		assertEquals(1, test.size());
 	}
 
 	@Test
@@ -97,13 +95,8 @@ public class MemberDaojdbcTest {
 	}
 
 	@Test
-	public void testUpdateCommunityMember() {
-		fail("Not yet implemented");
-	}
-
-	@Test
 	public void testUpdateClubMember() {
-		fail("Not yet implemented");
+		dao.updateClubMember(16, "yong@nate.com", 1);
 	}
 
 }
