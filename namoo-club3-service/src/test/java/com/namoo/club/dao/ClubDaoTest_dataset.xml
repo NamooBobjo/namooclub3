@@ -1,0 +1,7 @@
+<dataset>
+<socialperson email = "ksy5350@nate.com" userName = "김성용" password="1234"/>
+<socialperson email = "sss@nate.com" userName = "김성진"  password="1234"/>
+
+<club cmid="1" id= "1" clbuName="한식" description="세계요리"/>
+<club cmid="1" id= "1" clbuName="중식" description="중화요리"/>
+</dataset>
