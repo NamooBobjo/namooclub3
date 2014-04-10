@@ -24,7 +24,6 @@ import com.namoo.club.domain.entity.Club;
 public class ClubDaoTest extends DbCommonTest {
 
 	private ClubDao dao;
-	IDatabaseTester databaseTester;
 
 	@Before
 	public void setUp() throws Exception {
@@ -34,23 +33,25 @@ public class ClubDaoTest extends DbCommonTest {
 
 	@After
 	public void tearDown() throws Exception {
+		//
 		super.tearDown();
 	}
 
 	
 	@Test
 	public void testReadAllClub() {
-		List<Club> clubs = dao.readAllClub(1);
-		for(Club club : clubs){
-			assertEquals("축구", club.getName());			
+		//
+		List<Club> clubs = dao.readAllClub();
+		
+		assertEquals(2,clubs.size());		
 		}
-	}
 
 	@Test
 	public void testReadClub() {
-
-		Club club = dao.readClub(15);
-		assertEquals("축구", club.getName());
+		//
+		
+		Club club = dao.readClub(1);
+		assertEquals("한식", club.getName());
 	}
 
 	@Test
