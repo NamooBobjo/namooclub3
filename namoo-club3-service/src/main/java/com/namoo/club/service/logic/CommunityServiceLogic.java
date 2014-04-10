@@ -8,6 +8,7 @@ import com.namoo.club.dao.MemberDao;
 import com.namoo.club.dao.SocialPersonDao;
 import com.namoo.club.dao.factory.DaoFactory;
 import com.namoo.club.dao.factory.DaoFactory.DbType;
+import com.namoo.club.domain.entity.Category;
 import com.namoo.club.domain.entity.Community;
 import com.namoo.club.domain.entity.CommunityMember;
 import com.namoo.club.domain.entity.SocialPerson;
@@ -66,7 +67,7 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 
 	@Override
-	public void registCommunity(String communityName, String description, String email, List<String> category) {
+	public void registCommunity(String communityName, String description, String email, List<Category> category) {
 		//
 		if (isExistCommunityByName(communityName)) {
 			throw NamooExceptionFactory.createRuntime("이미 존재하는 커뮤니티입니다.");

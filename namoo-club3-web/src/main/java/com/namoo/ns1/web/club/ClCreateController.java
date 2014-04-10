@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.namoo.club.domain.entity.Category;
 import com.namoo.club.domain.entity.Community;
 import com.namoo.club.service.facade.CommunityService;
 import com.namoo.club.service.facade.TownerService;
@@ -36,7 +37,7 @@ public class ClCreateController extends HttpServlet{
 		CommunityService cmservice = NamooClubServiceFactory.getInstance().getCommunityService();
 		
 		Community community = cmservice.findCommunity(cmId);
-		List<String> category = community.getCategory();		
+		List<Category> category = community.getCategory();		
 		
 		HttpSession session = req.getSession();
 		String loginID = (String) session.getAttribute("loginID");

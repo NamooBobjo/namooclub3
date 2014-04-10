@@ -1,6 +1,6 @@
 package com.namoo.club.dao;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.*;
 
 import java.util.List;
 
@@ -46,15 +46,36 @@ public class CommunityDaoTest extends DbCommonTest{
 	@Test
 	public void testCreateCommunity() {
 		//
+		Community community = new Community();
+		community.setName("abdbsdb");
+		community.setDescription("dsfsdfsdf");
+		
+		int communityId = dao.createCommunity(community);
+		
+		community = dao.readCommunity(communityId);
+		
+		assertEquals("dsfsdfsdf", community.getDescription());
 	}
 
 	@Test
 	public void testDeleteCommunity() {
 		//
+		assertNotNull(dao.readCommunity(1));
+		
+		dao.deleteCommunity(1);
+		
+		assertNull(dao.readCommunity(1));
 	}
 
 	@Test
 	public void testUpdateCommunity() {
 		//
+		Community community =dao.readCommunity(1);
+		community.setName("아아아아아아아");
+		
+		dao.updateCommunity(community);
+		
+		community = dao.readCommunity(1);
+		assertEquals("아아아아아아아", community.getName());
 	}
 }

@@ -2,6 +2,7 @@ package com.namoo.club.service.facade;
 
 import java.util.List;
 
+import com.namoo.club.domain.entity.Category;
 import com.namoo.club.domain.entity.Community;
 import com.namoo.club.domain.entity.CommunityMember;
 
@@ -43,7 +44,7 @@ public interface CommunityService {
 	 * 
 	 * @throws NamooRuntimeException
 	 */
-	public void registCommunity(String communityName, String description, String email, List<String> category);
+	public void registCommunity(String communityName, String description, String email, List<Category> category);
 
 	/**
 	 * 

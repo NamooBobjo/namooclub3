@@ -10,7 +10,7 @@ public class Community  {
 	private int cmId;
 	private String name;
 	private String description;
-	private List<String> category;
+	private List<Category> category;
 
 	private Date openDate;
 	private List<Club> clubs;
@@ -20,6 +20,10 @@ public class Community  {
 
 	//--------------------------------------------------------------------------
 	// constructors
+	
+	public Community(){
+		//
+	}
 	
 	/**
 	 * 
@@ -62,7 +66,7 @@ public class Community  {
 		addMember(admin);
 	}
 	
-	public Community(String communityName, String description, SocialPerson admin, List<String> category){
+	public Community(String communityName, String description, SocialPerson admin, List<Category> category){
 		//
 		this.name = communityName;
 		this.description = description;
@@ -75,7 +79,7 @@ public class Community  {
 		addMember(admin);
 	}
 	
-	public Community(int id, String communityName, String description, SocialPerson admin, List<String> category){
+	public Community(int id, String communityName, String description, SocialPerson admin, List<Category> category){
 		//
 		this.cmId = id;
 		this.name = communityName;
@@ -139,11 +143,11 @@ public class Community  {
 		this.openDate = openDate;
 	}
 
-	public List<String> getCategory() {
+	public List<Category> getCategory() {
 		return category;
 	}
 
-	public void setCategory(List<String> category) {
+	public void setCategory(List<Category> category) {
 		this.category = category;
 	}
 
