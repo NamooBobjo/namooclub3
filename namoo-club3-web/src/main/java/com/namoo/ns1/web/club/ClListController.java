@@ -35,40 +35,55 @@ public class ClListController extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		//
-		HttpSession session = req.getSession();
-		String email = (String)session.getAttribute("loginID");
-		String cmId = req.getParameter("cmId");
 		
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/club/home.jsp");
+		dispatcher.forward(req, resp);
 		CommunityService cmservice = NamooClubServiceFactory.getInstance().getCommunityService();
-		Community community = cmservice.findCommunity(cmId);
 		ClubService clservice = NamooClubServiceFactory.getInstance().getClubService();
+		TownerService townerService=NamooClubServiceFactory.getInstance().getTownerService();
+		HttpSession session = req.getSession();
 		
-		List<Club> clubs = new ArrayList<>(cmservice.findCommunity(cmId).getClubs());
-		List<Club> belongclubs = new ArrayList<>(clservice.findBelongClub(cmId, email));
-		List<Club> managedclubs = new ArrayList<>(clservice.findManagedClub(cmId,email));
+		List<Club> clubs = null;
+		List<Club> belongclubs = null;
+		List<Club> managedclubs = null;
 		
-		clubs = filter(clubs, belongclubs);
-		belongclubs = filter(belongclubs, managedclubs);
+		String loginID = (String) session.getAttribute("loginID");
 		
-		String cmname = community.getName();
+		if(!clservice.findAllClubs().isEmpty()) {
+			clubs= clservice.findAllClubs();
+		}
+		
+	
+		
+		
+		String cmId = req.getParameter("cmId");
+		//Community community = cmservice.findCommunity(cmId);
+		
+		String email = (String)session.getAttribute("loginID");
+		//String cmname = community.getName();
+		
+		
+		
+		
+		String loginUser= townerService.findTowner(loginID).getName();
+		
 		
 		req.setAttribute("managedclubs", managedclubs);
 		req.setAttribute("clubs", clubs);
-		req.setAttribute("cmName", cmname);
+		req.setAttribute("loginUser", loginUser);
+		//req.setAttribute("cmName", cmname);
 		req.setAttribute("cmId", cmId);		
 		req.setAttribute("belongclubs", belongclubs);
 		req.setAttribute("belongclubs", belongclubs);
 		
-		String loginID = (String) session.getAttribute("loginID");
-		TownerService townerService=NamooClubServiceFactory.getInstance().getTownerService();
-		String loginUser= townerService.findTowner(loginID).getName();
-		req.setAttribute("loginUser", loginUser);
-		
-		
-		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/club/home.jsp");
 		dispatcher.forward(req, resp);
+		return;
 	}
+	//clubs = filter(clubs, belongclubs);
+	//belongclubs = filter(belongclubs, managedclubs);
+	
 
+	/*
 	private List<Club> filter(List<Club> all, List<Club> filters) {
 		//
 		List<Club> removed = new ArrayList<>();
@@ -85,5 +100,5 @@ public class ClListController extends HttpServlet{
 		}
 		return all;
 	}
-	
+	*/
 }
