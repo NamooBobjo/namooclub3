@@ -5,11 +5,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import com.namoo.club.dao.CommunityCategoryDao;
-import com.namoo.club.domain.entity.Category;
+import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 
 public class CommunityCategoryDaojdbc implements CommunityCategoryDao {
 
@@ -36,8 +35,9 @@ public class CommunityCategoryDaojdbc implements CommunityCategoryDao {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			//
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("readAllCategory 오류");
 		} finally {
 			quiet(resultSet, pstmt, conn);
 		}
@@ -64,8 +64,11 @@ public class CommunityCategoryDaojdbc implements CommunityCategoryDao {
 			}
 
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			//
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("readCategory 오류");
+		} finally {
+			quiet(resultSet, pstmt, conn);
 		}
 
 		return category;
@@ -84,8 +87,9 @@ public class CommunityCategoryDaojdbc implements CommunityCategoryDao {
 			resultSet = pstmt.executeQuery();		
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			//
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("deleteCategory 오류");
 		}finally{
 			quiet(resultSet, pstmt, conn);
 		}
@@ -108,8 +112,9 @@ public class CommunityCategoryDaojdbc implements CommunityCategoryDao {
 			}
 		
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			//
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("createCategory 오류");
 		} finally {
 			quiet(pstmt, conn);
 		}

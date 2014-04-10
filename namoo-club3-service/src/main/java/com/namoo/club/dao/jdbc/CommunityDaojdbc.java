@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.namoo.club.dao.CommunityDao;
 import com.namoo.club.domain.entity.Community;
+import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 
 
 public class CommunityDaojdbc implements CommunityDao {
@@ -40,13 +41,9 @@ public class CommunityDaojdbc implements CommunityDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("readAllCommunity 오류");
 		}finally{
-			if(resultSet != null)
-				try { resultSet.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			quiet(resultSet, pstmt, conn);
 		}
 		return communities;
 	}
@@ -75,7 +72,7 @@ public class CommunityDaojdbc implements CommunityDao {
 			}
 			
 		} catch (SQLException e) {
-			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("readCommunity 오류");
 		}finally{
 			quiet(resultSet, pstmt, conn);
 		}
@@ -105,6 +102,7 @@ public class CommunityDaojdbc implements CommunityDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("readCommunity 오류");
 		}finally{
 			quiet(resultSet, pstmt, conn);
 		}
@@ -133,6 +131,7 @@ public class CommunityDaojdbc implements CommunityDao {
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("createCommunity 오류");
 		}finally{
 			quiet(result, pstmt, conn);
 		}
@@ -157,11 +156,9 @@ public class CommunityDaojdbc implements CommunityDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("deleteCommunity 오류");
 		}finally{
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			quiet(pstmt, conn);
 		}
 	}
 
@@ -183,11 +180,9 @@ public class CommunityDaojdbc implements CommunityDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("updateCommunity 오류");
 		}finally{
-			if(conn != null) 
-				try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-			if(pstmt != null) 
-				try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+			quiet(pstmt, conn);
 		}
 	}
 
