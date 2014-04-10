@@ -33,7 +33,6 @@ public class CommunityListController extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 		//
-		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/community/home.jsp");
 		CommunityService service = NamooClubServiceFactory.getInstance().getCommunityService();
 		TownerService townerservice = NamooClubServiceFactory.getInstance().getTownerService();
 		HttpSession session = req.getSession();
@@ -45,39 +44,43 @@ public class CommunityListController extends HttpServlet{
 			
 		String loginID = (String) session.getAttribute("loginID");
 		
-	
+		
+		// 전체 커뮤니티 목록 조회
 		if(!service.findAllCommunities().isEmpty()){
 			communities = service.findAllCommunities();
 		}		
 		
-		if(!service.findBelongCommunities(loginID).isEmpty()){
-			belongCommunities = service.findBelongCommunities(loginID);	
+		// 가입된 커뮤니티 목록 조회
+		belongCommunities = service.findBelongCommunities(loginID);
+		
+		// 미가입 커뮤니티
+		if(!belongCommunities.isEmpty()){
 			for(Community community : belongCommunities){
 				communities.remove(community);
 			}	
 		}		
-		
-		
-		if(!service.findManagedCommnities(loginID).isEmpty()){
-			managedCommunities = service.findManagedCommnities(loginID);
-			
-			if(!service.findBelongCommunities(loginID).isEmpty()){
-			for(Community community : managedCommunities){
-				belongCommunities.remove(community);
-			}
-			}
-			
-			req.setAttribute("managedCommunities", managedCommunities);
-		}
-		
-		
-		String loginUser = townerservice.findTowner(loginID).getName();
-		
-		req.setAttribute("loginUser", loginUser);
 		req.setAttribute("communities", communities);
-		
+
+		// 관리중인 커뮤니티
+		managedCommunities = service.findManagedCommnities(loginID);
+		req.setAttribute("managedCommunities", managedCommunities);
+
+		// 관리하지 않는 가입중인 커뮤니티
+		if(!managedCommunities.isEmpty()){
+			if(!belongCommunities.isEmpty()){
+				for(Community community : managedCommunities){
+					belongCommunities.remove(community);
+				}
+			}
+		}
 		req.setAttribute("belongCommunities", belongCommunities);
 		
+		// 로그인 사용자 이름
+		String loginUser = townerservice.findTowner(loginID).getName();
+		req.setAttribute("loginUser", loginUser);
+		
+		// 포워딩
+		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/community/home.jsp");
 		dispatcher.forward(req, resp);
 		return;
 	}

@@ -12,10 +12,8 @@ import com.namoo.club.dao.factory.DaoFactory;
 import com.namoo.club.dao.factory.DaoFactory.DbType;
 import com.namoo.club.domain.entity.Club;
 import com.namoo.club.domain.entity.ClubMember;
-import com.namoo.club.domain.entity.Community;
 import com.namoo.club.domain.entity.SocialPerson;
 import com.namoo.club.service.facade.ClubService;
-import com.namoo.club.service.facade.CommunityService;
 import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 
 public class ClubServiceLogic implements ClubService {
@@ -33,14 +31,10 @@ public class ClubServiceLogic implements ClubService {
 		communitydao = DaoFactory.createFactory(DbType.MariaDB).getCommunityDao();
 		categorydao = DaoFactory.createFactory(DbType.MariaDB).getCommunityCategoryDao();
 	}
-			
-	
 
-
-	private boolean isExistClubByName(String cmId, String clubName) {
+	private boolean isExistClubByName(int cmId, String clubName) {
 		// 
-		int id = Integer.parseInt(cmId);
-		List<Club> clubs = clubdao.readAllClub(id);
+		List<Club> clubs = clubdao.readAllClub(cmId);
 		for(Club club : clubs){
 			if(club.getName().equals(clubName)){
 				return true;
@@ -60,7 +54,7 @@ public class ClubServiceLogic implements ClubService {
 	}
 
 	@Override
-	public void registClub(String cmId, String category, String clubName, String description, String email) {
+	public void registClub(int cmId, String category, String clubName, String description, String email) {
 		//
 		if (isExistClubByName(cmId, clubName)) {
 			throw NamooExceptionFactory.createRuntime("이미 존재하는 클럽입니다.");
@@ -71,10 +65,7 @@ public class ClubServiceLogic implements ClubService {
 			throw NamooExceptionFactory.createRuntime("존재하지 않는 주민입니다.");
 		}
 		
-		int cmid = Integer.parseInt(cmId); 
-				
-		
-		Club club = new Club(cmid, category, clubName, description, towner);
+		Club club = new Club(cmId, category, clubName, description, towner);
 		clubdao.createClub(club);	
 		
 	}
@@ -87,8 +78,6 @@ public class ClubServiceLogic implements ClubService {
 
 	@Override
 	public void joinAsMember(String clubName, String name, String email,String password) {
-		
-		
 		
 		Club club = clubdao.readClubByName(clubName);
 		
@@ -158,7 +147,6 @@ public class ClubServiceLogic implements ClubService {
 				return member;
 			}
 		}
-		
 		return null;
 	}
 
@@ -188,7 +176,6 @@ public class ClubServiceLogic implements ClubService {
 		if (club != null) {
 			return club.getMembers().size();
 		}
-		
 		return 0;
 	}
 
@@ -198,14 +185,12 @@ public class ClubServiceLogic implements ClubService {
 		Club club = clubdao.readClubByName(clubName);
 		int clid = Integer.parseInt(club.getId());
 		clubdao.deleteClub(clid);
-		
 	}
 
 	@Override
-	public List<Club> findBelongClub(String cmId, String email) {
+	public List<Club> findBelongClub(int cmId, String email) {
 		//
-		int cmid = Integer.parseInt(cmId);
-		List<Club> clubs = clubdao.readAllClub(cmid);
+		List<Club> clubs = clubdao.readAllClub(cmId);
 		if (clubs == null) return null;
 		
 		List<Club> belongs = new ArrayList<>();
@@ -226,10 +211,9 @@ public class ClubServiceLogic implements ClubService {
 	}
 	
 	@Override
-	public List<Club> findManagedClub(String cmId, String email) {
+	public List<Club> findManagedClub(int cmId, String email) {
 		//
-		int cmid = Integer.parseInt(cmId);
-		List<Club> clubs = clubdao.readAllClub(cmid);
+		List<Club> clubs = clubdao.readAllClub(cmId);
 		if (clubs == null) return null;
 		
 		List<Club> manages = new ArrayList<>();

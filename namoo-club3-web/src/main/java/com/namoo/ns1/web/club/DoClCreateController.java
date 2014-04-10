@@ -39,7 +39,7 @@ public class DoClCreateController extends HttpServlet{
 		String clubName = req.getParameter("clName");
 		String description = req.getParameter("content");
 		String email = (String)session.getAttribute("loginID");
-		String cmId = req.getParameter("cmId");
+		int cmId = Integer.parseInt(req.getParameter("cmId"));
 		String category = req.getParameter("category");
 		
 		Community community =	cmservice.findCommunity(cmId);

@@ -34,7 +34,7 @@ public class CommunityJoinController extends HttpServlet {
 		
 
 		CommunityService cmservice = NamooClubServiceFactory.getInstance().getCommunityService();
-		String cmId = req.getParameter("cmId");		
+		int cmId = Integer.getInteger(req.getParameter("cmId"));
 		Community community = cmservice.findCommunity(cmId);
 		
 		

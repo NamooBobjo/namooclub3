@@ -112,7 +112,7 @@ public interface CommunityService {
 	/**
 	 * @param communityName
 	 */
-	public void removeCommunity(String communityName);
+	public void removeCommunity(int communityName);
 	
 	/**
 	 * 자신이 회원으로 있는 커뮤니티 목록조회

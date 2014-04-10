@@ -31,7 +31,7 @@ public class CommunityWithdrawController extends HttpServlet{
 			throws ServletException, IOException {
 		
 		CommunityService cmservice = NamooClubServiceFactory.getInstance().getCommunityService();
-		String cmId = req.getParameter("cmId");
+		int cmId = Integer.getInteger(req.getParameter("cmId"));
 		Community community = cmservice.findCommunity(cmId);
 		
 		String cmName = community.getName();

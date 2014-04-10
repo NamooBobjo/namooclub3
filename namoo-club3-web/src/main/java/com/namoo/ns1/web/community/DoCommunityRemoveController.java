@@ -28,7 +28,7 @@ public class DoCommunityRemoveController extends HttpServlet {
 			throws ServletException, IOException {
 		// 
 		
-		String cmId = req.getParameter("cmId");
+		int cmId = Integer.parseInt(req.getParameter("cmId"));
 		
 		CommunityService service = NamooClubServiceFactory.getInstance().getCommunityService();
 		service.removeCommunity(cmId);

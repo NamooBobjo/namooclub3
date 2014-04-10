@@ -31,7 +31,7 @@ public class ClCreateController extends HttpServlet{
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 	
-		String cmId = req.getParameter("cmId");		
+		int cmId = Integer.parseInt(req.getParameter("cmId"));		
 		req.setAttribute("cmId", cmId);		
 		CommunityService cmservice = NamooClubServiceFactory.getInstance().getCommunityService();
 		
@@ -48,6 +48,4 @@ public class ClCreateController extends HttpServlet{
 		RequestDispatcher dispatcher = req.getRequestDispatcher("/WEB-INF/views/club/create.jsp");
 		dispatcher.forward(req, resp);
 	}
-	
-	
 }

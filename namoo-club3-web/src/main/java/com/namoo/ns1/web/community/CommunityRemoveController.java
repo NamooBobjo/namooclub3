@@ -32,7 +32,7 @@ public class CommunityRemoveController extends HttpServlet {
 	protected void doPost(HttpServletRequest req, HttpServletResponse resp)
 			throws ServletException, IOException {
 	
-		String cmId = req.getParameter("cmId");
+		int cmId = Integer.parseInt(req.getParameter("cmId"));
 		
 		CommunityService cmservice = NamooClubServiceFactory.getInstance().getCommunityService();
 		Community community = cmservice.findCommunity(cmId);

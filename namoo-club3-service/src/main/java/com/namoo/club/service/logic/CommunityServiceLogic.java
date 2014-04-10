@@ -204,15 +204,9 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 
 	@Override
-	public void removeCommunity(String communityName) {
+	public void removeCommunity(int communityName) {
 		// 
-		Community findCm = null;
-		for(Community community : cmDao.readAllCommunity()){
-			if(community.getName().equals(communityName)){
-				findCm = cmDao.readCommunity(community.getId());
-			}
-		}
-		cmDao.deleteCommunity(findCm.getId());
+		cmDao.deleteCommunity(communityName);
 	}
 
 	@Override

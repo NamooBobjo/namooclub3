@@ -13,7 +13,7 @@ public interface ClubService {
 	/**
 	 * [주민으로 등록된 경우] 클럽 개설
 	 */
-	public void registClub(String cmId,String category,String clubName, String description, String email);
+	public void registClub(int cmId,String category,String clubName, String description, String email);
 
 	/**
 	 * 
@@ -66,7 +66,7 @@ public interface ClubService {
 	 * @param email
 	 * @return
 	 */
-	public List<Club> findBelongClub(String cmId, String email);
+	public List<Club> findBelongClub(int cmId, String email);
 	
 	/**
 	 * 자신이 관리하는 클럽 목록조회
@@ -74,7 +74,7 @@ public interface ClubService {
 	 * @param email
 	 * @return
 	 */
-	public List<Club> findManagedClub(String cmId, String email);
+	public List<Club> findManagedClub(int cmId, String email);
 
 	/**
 	 * 클럽에서 탈퇴하기
