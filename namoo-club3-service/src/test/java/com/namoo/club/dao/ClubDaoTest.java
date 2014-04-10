@@ -57,14 +57,17 @@ public class ClubDaoTest extends DbCommonTest {
 	@Test
 	public void testCreateClub() {
 
-		Club club = new Club(1, 2, 11, "축구", "축구합시다");
-		dao.createClub(club);
+		Club club = new 
+		club.setName("야구클럽");
+		club.setDescription("조기야구");
+		
 	}
 
 	@Test
 	public void testDeleteClub() {
 
-		dao.deleteClub(15);
+		dao.deleteClub(1);
+		assertNull(dao.readClub(1));
 	}
 
 	@Test

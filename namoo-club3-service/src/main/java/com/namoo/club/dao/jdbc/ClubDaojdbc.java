@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.namoo.club.dao.ClubDao;
 import com.namoo.club.domain.entity.Club;
+import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 
 public class ClubDaojdbc implements ClubDao {
 
@@ -106,6 +107,7 @@ public class ClubDaojdbc implements ClubDao {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			
 		} finally {
 			quiet(pstmt, conn);
 		}
@@ -123,11 +125,12 @@ public class ClubDaojdbc implements ClubDao {
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setInt(1, clid);
-			pstmt.executeQuery();
+			pstmt.executeUpdate();
 		}
 
 		catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("클럽 삭제중 오류가 발생하였습니다.");
 		} finally {
 			quiet(pstmt, conn);
 		}
