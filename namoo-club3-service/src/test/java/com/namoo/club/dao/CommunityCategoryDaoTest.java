@@ -1,4 +1,4 @@
-package com.namoo.club.dao.jdbc;
+package com.namoo.club.dao;
 
 import static org.junit.Assert.*;
 
@@ -20,8 +20,9 @@ import org.junit.Test;
 import com.namoo.club.dao.CommunityCategoryDao;
 import com.namoo.club.dao.SocialPersonDao;
 import com.namoo.club.dao.factory.DaoFactory.DbType;
+import com.namoo.club.dao.jdbc.MariaDBDaoFactory;
 
-public class CommunityCategoryDaojdbcTest {
+public class CommunityCategoryDaoTest {
 	private CommunityCategoryDao dao;
 	IDatabaseTester databaseTester;
 

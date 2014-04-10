@@ -1,4 +1,4 @@
-package com.namoo.club.dao.jdbc;
+package com.namoo.club.dao;
 
 import static org.junit.Assert.*;
 
@@ -9,9 +9,10 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.namoo.club.dao.CommunityDao;
+import com.namoo.club.dao.jdbc.CommunityDaojdbc;
 import com.namoo.club.domain.entity.Community;
 
-public class CommunityDaojdbcTest {
+public class CommunityDaoTest {
 	
 	private CommunityDao dao = null;
 	
