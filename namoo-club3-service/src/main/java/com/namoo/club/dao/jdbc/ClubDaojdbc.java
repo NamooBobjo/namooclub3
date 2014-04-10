@@ -44,6 +44,7 @@ public class ClubDaojdbc implements ClubDao {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("클럽목록조회 중 오류가 발생하였습니다.");
 		}finally{
 			quiet(resultSet, pstmt, conn);
 		}
@@ -80,6 +81,7 @@ public class ClubDaojdbc implements ClubDao {
 
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("클럽 조회중 오류가 발생하였습니다.");
 		} finally {
 			quiet(resultSet, pstmt, conn);
 		}
@@ -87,7 +89,7 @@ public class ClubDaojdbc implements ClubDao {
 	}
 
 	@Override
-	public void createClub(Club club) {
+	public Integer createClub(Club club) {
 		//
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -104,13 +106,19 @@ public class ClubDaojdbc implements ClubDao {
 			pstmt.setString(3, club.getName());
 			pstmt.setString(4, club.getDescription());
 			pstmt.executeUpdate();
+			
+			ResultSet genKeys = pstmt.getGeneratedKeys();
+			if (genKeys.next()) {
+				//club.setId(Integer.toString(genKeys.getInt(1)));
+			}
 
 		} catch (SQLException e) {
 			e.printStackTrace();
-			
+			throw NamooExceptionFactory.createRuntime("클럽 생성중 오류가 발생하였습니다.");
 		} finally {
 			quiet(pstmt, conn);
 		}
+		return club.getId();
 	}
 
 	@Override
@@ -149,12 +157,13 @@ public class ClubDaojdbc implements ClubDao {
 
 			pstmt.setString(1, club.getName());
 			pstmt.setString(2, club.getDescription());
-			pstmt.setInt(3, Integer.parseInt(club.getId()));
+			pstmt.setInt(3, club.getId());
 
 			pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("클럽수정 중 오류가 발생하였습니다.");
 		} finally {
 			quiet(pstmt, conn);
 		}
@@ -254,6 +263,7 @@ public class ClubDaojdbc implements ClubDao {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("클럽목록조회 중 오류가 발생하였습니다.");
 		}finally{
 			quiet(resultSet, pstmt, conn);
 		}

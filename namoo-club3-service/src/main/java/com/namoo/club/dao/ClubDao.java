@@ -10,7 +10,7 @@ public interface ClubDao {
 	List<Club> readAllClub(int cmid);
 	Club readClub(int clid);
     Club readClubByName(String clName);
-	void createClub(Club club);
+	Integer createClub(Club club);
 	void deleteClub(int clid);
 	void updateClub(Club club);
 

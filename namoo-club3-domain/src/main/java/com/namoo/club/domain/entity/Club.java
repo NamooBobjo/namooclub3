@@ -10,21 +10,24 @@ public class Club  {
 	
 
 	private String cmid;
-	private String id;
-	private int cgid;
-	
+	private Integer id;
 
 	private String name;
 	private String description;
 	private Date openDate;
-	private String category;
+	private Category category;
 	
 
 	private ClubManager manager;
 	private List<ClubMember> members;
+	private int cgid;
 	
 	//--------------------------------------------------------------------------
 		// constructors
+	
+	public Club() {
+		//
+	}
 	
 	/**
 	 * 
@@ -32,7 +35,7 @@ public class Club  {
 	 * @param admin
 	 */
 	
-	public Club (String cmid, String id, String category, String clubName, String description, SocialPerson admin) {
+	public Club (String cmid, Integer id, Category category, String clubName, String description, SocialPerson admin) {
 		//
 		this.cmid=cmid;
 		this.id = id;
@@ -47,7 +50,7 @@ public class Club  {
 		
 	}
 	
-	public Club (String cmid, String id, String clubName, String description, SocialPerson admin) {
+	public Club (String cmid, Integer id, String clubName, String description, SocialPerson admin) {
 		//
 		this.cmid=cmid;
 		this.id = id;
@@ -64,7 +67,7 @@ public class Club  {
 	public Club(int cmid, int id, int cgId, String clubName,String description) {
 		// TODO Auto-generated constructor stub
 		this.cmid = Integer.toString(cmid);
-		this.id = Integer.toString(id);
+		this.id = id;
 		this.name = clubName;
 		this.description = description;
 		this.cgid = cgId;
@@ -86,7 +89,7 @@ public class Club  {
 		addMember(admin);
 	}
 	
-	public Club(int cmid, String category, String clubName,String description, SocialPerson admin) {
+	public Club(int cmid, Category category, String clubName,String description, SocialPerson admin) {
 
 		this.cmid=Integer.toString(cmid);
 		
@@ -102,12 +105,12 @@ public class Club  {
 
 	//--------------------------------------------------------------------------
 		// getter/setter
-	public String getCategory() {
+	public Category getCategory() {
 		return category;
 	}
 
 
-	public void setCategory(String category) {
+	public void setCategory(Category category) {
 		this.category = category;
 	}
 	
@@ -115,10 +118,14 @@ public class Club  {
 		return cmid;
 	}
 	
-	public String getId() {
+	public Integer getId() {
 		return id;
 	}
 	
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
 	public String getName() {
 		return name;
 	}
