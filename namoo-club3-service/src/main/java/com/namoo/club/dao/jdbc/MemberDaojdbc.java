@@ -83,7 +83,7 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 	
 	@Override
 	public List<ClubMember> readClubMembers(int clId) {
-		
+		//
 		Connection conn = null;
 		ResultSet resultSet = null;
 		PreparedStatement pstmt = null;
@@ -119,6 +119,42 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 		return clubMembers;
 	}
 
+
+	@Override
+	public ClubMember readClubMember(int clId, String email) {
+		//
+		Connection conn = null;
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		ClubMember member = null;
+		try {
+			conn = DbConnection.getConnection();
+			String sql = "SELECT a.email, a.id, c.clName, a.kind, a.mainManager, a.manager, b.username FROM member a " +
+					"INNER JOIN socialPerson b ON a.email = b.email " +
+					"INNER JOIN club c ON a.id = c.clId " +
+					"WHERE a.kind = '2' AND a.id = ? AND a.email = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, clId);
+			pstmt.setString(2, email);
+			resultSet = pstmt.executeQuery();
+			
+			if(resultSet.next()){
+				SocialPerson rolePerson = new SocialPerson();
+				rolePerson.setEmail(resultSet.getString("email"));
+				rolePerson.setName(resultSet.getString("username"));
+				String clubName = resultSet.getString("clName");
+				member = new ClubMember(clubName, rolePerson); 
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally{
+			closeQuietly(resultSet, pstmt, conn);
+		}
+		
+		return member;
+	}
+	
 	@Override
 	public void joinAsCommunityMember(int cmId, int mainManager, SocialPerson person) {
 		Connection conn = null;
@@ -225,5 +261,6 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 			closeQuietly(pstmt, conn);
 		}
 	}
+
 }
 
