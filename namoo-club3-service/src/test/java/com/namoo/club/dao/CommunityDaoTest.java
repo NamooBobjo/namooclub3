@@ -10,6 +10,7 @@ import org.junit.Test;
 
 import com.namoo.club.dao.jdbc.CommunityDaojdbc;
 import com.namoo.club.domain.entity.Community;
+import com.namoo.club.shared.DbCommonTest;
 
 public class CommunityDaoTest extends DbCommonTest{
 	

@@ -12,6 +12,7 @@ import org.junit.Test;
 import com.namoo.club.dao.factory.DaoFactory.DbType;
 import com.namoo.club.dao.jdbc.MariaDBDaoFactory;
 import com.namoo.club.domain.entity.Category;
+import com.namoo.club.shared.DbCommonTest;
 
 public class CommunityCategoryDaoTest extends DbCommonTest {
 	

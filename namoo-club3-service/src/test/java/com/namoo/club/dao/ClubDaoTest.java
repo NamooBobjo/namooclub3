@@ -13,6 +13,7 @@ import com.namoo.club.dao.factory.DaoFactory.DbType;
 import com.namoo.club.dao.jdbc.MariaDBDaoFactory;
 import com.namoo.club.domain.entity.Category;
 import com.namoo.club.domain.entity.Club;
+import com.namoo.club.shared.DbCommonTest;
 
 public class ClubDaoTest extends DbCommonTest {
 

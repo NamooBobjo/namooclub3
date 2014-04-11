@@ -13,6 +13,7 @@ import com.namoo.club.domain.entity.ClubManager;
 import com.namoo.club.domain.entity.ClubMember;
 import com.namoo.club.domain.entity.CommunityMember;
 import com.namoo.club.domain.entity.SocialPerson;
+import com.namoo.club.shared.DbCommonTest;
 
 public class MemberDaoTest extends DbCommonTest{
 

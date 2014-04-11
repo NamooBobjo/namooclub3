@@ -1,4 +1,4 @@
-package com.namoo.club.dao;
+package com.namoo.club.shared;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
