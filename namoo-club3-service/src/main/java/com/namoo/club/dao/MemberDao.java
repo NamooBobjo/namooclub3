@@ -2,6 +2,7 @@ package com.namoo.club.dao;
 
 import java.util.List;
 
+import com.namoo.club.domain.entity.ClubManager;
 import com.namoo.club.domain.entity.ClubMember;
 import com.namoo.club.domain.entity.CommunityMember;
 import com.namoo.club.domain.entity.SocialPerson;
@@ -17,6 +18,6 @@ public interface MemberDao {
 	void joinAsClubMember(int clid, int mainManager, SocialPerson person);
 	void deleteCommunityMember(int cmId, String email);
 	void deleteClubMember(int clId, String email);
-	void updateClubManager(int clId, String email, int manager);
-
+	void updateClubMember(int clubId, String email, boolean isManager);
+	List<ClubManager> readClubManagers(int clubId);
 }

@@ -9,7 +9,6 @@ import java.util.List;
 
 import com.namoo.club.dao.CommunityCategoryDao;
 import com.namoo.club.domain.entity.Category;
-import com.namoo.club.domain.entity.Club;
 import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 
 public class CommunityCategoryDaojdbc extends JdbcDaoTemplate implements CommunityCategoryDao {

@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.namoo.club.dao.MemberDao;
+import com.namoo.club.domain.entity.ClubManager;
 import com.namoo.club.domain.entity.ClubMember;
 import com.namoo.club.domain.entity.CommunityMember;
 import com.namoo.club.domain.entity.SocialPerson;
+import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 
 public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 
@@ -24,7 +26,7 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 		
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "SELECT a.email, a.id, c.cmName, a.kind, a.mainManager, b.username FROM member a " +
+			String sql = "SELECT a.email, a.id, c.cmName, a.kind, b.username FROM member a " +
 					"INNER JOIN socialPerson b ON a.email = b.email " + 
 					"INNER JOIN community c ON a.id = c.cmId " + 
 					"WHERE kind = 1 and id = ?";
@@ -46,10 +48,49 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("커뮤니티 멤버 조회 중 오류가 발생하였습니다.");
 		}finally{
 			closeQuietly(resultSet, pstmt, conn);
 		}
 		return communityMembers;
+	}
+	@Override
+	public List<ClubManager> readClubManagers(int clubId) {
+		//
+		Connection conn = null;
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		List<ClubManager> managers = new ArrayList<>();
+		
+		try {
+			conn = DbConnection.getConnection();
+			String sql = "SELECT a.email, a.id, c.clName, a.kind, b.username FROM member a " +
+					"INNER JOIN socialPerson b ON a.email = b.email " + 
+					"INNER JOIN club c ON a.id = c.clId " + 
+					"WHERE a.kind = '2' AND a.id = ? AND a.manager = '1'";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, clubId);
+			resultSet = pstmt.executeQuery();
+			
+			while(resultSet.next()){
+				SocialPerson rolePerson = new SocialPerson();
+				rolePerson.setEmail(resultSet.getString("email"));
+				rolePerson.setName(resultSet.getString("username"));
+				
+				String clubName = resultSet.getString("clName");
+				ClubManager manager = new ClubManager(clubName, rolePerson);
+				
+				managers.add(manager);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("클럽매니져 조회 중 오류가 발생하였습니다.");
+		}finally{
+			closeQuietly(resultSet, pstmt, conn);
+		}
+		return managers;
 	}
 
 	@Override
@@ -75,6 +116,7 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("관리자ID 조회 중 오류가 발생하였습니다.");
 		}finally{
 			closeQuietly(resultSet, pstmt, conn);
 		}
@@ -112,6 +154,7 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("클럽멤버 목록 조회 중 오류가 발생하였습니다.");
 		}finally{
 			closeQuietly(resultSet, pstmt, conn);
 		}
@@ -148,6 +191,7 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("클럽멤버 조회 중 오류가 발생하였습니다.");
 		}finally{
 			closeQuietly(resultSet, pstmt, conn);
 		}
@@ -191,6 +235,7 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 			pstmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("커뮤니티 멤버가입 중 오류가 발생하였습니다.");
 		}finally{
 			closeQuietly(pstmt, conn);
 		}
@@ -212,6 +257,7 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("커뮤니티 멤버 삭제 중 오류가 발생하였습니다.");
 		}finally{
 			closeQuietly(pstmt, conn);
 		}
@@ -234,6 +280,7 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("클럽 멤버 삭제 중 오류가 발생하였습니다.");
 		}finally{
 			closeQuietly(pstmt, conn);
 		}
@@ -241,7 +288,7 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 
 
 	@Override
-	public void updateClubManager(int clId, String email, int manager) {
+	public void updateClubMember(int clubId, String email, boolean isManager) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -249,8 +296,8 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 			String sql = "UPDATE member SET manager = ? WHERE kind = 2 AND id = ? AND email = ? ";
 			pstmt = conn.prepareStatement(sql);
 			
-			pstmt.setInt(1, manager);
-			pstmt.setInt(2, clId);
+			pstmt.setString(1, isManager ? "1" : "0");
+			pstmt.setInt(2, clubId);
 			pstmt.setString(3, email);
 			
 			pstmt.executeUpdate();
