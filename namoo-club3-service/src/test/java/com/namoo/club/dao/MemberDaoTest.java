@@ -33,13 +33,13 @@ public class MemberDaoTest extends DbCommonTest{
 	public void testReadCommunityMember() {
 		//
 		List<CommunityMember> test = dao.readCommunityMembers(1);
-		assertEquals(1, test.size());
+		assertEquals(2, test.size());
 	}
 
 	@Test
 	public void testReadClubMember() {
 		List<ClubMember> test = dao.readClubMembers(1);
-		assertEquals(1, test.size());
+		assertEquals(2, test.size());
 	}
 
 	@Test
