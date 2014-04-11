@@ -8,9 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.namoo.club.dao.SocialPersonDao;
+import com.namoo.club.domain.entity.Category;
+import com.namoo.club.domain.entity.Club;
 import com.namoo.club.domain.entity.SocialPerson;
+import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 
-public class SocialPersonDaojdbc implements SocialPersonDao {
+public class SocialPersonDaojdbc extends JdbcDaoTemplate implements SocialPersonDao {
 
 	@Override
 	//전체 목록 조회
@@ -28,23 +31,21 @@ public class SocialPersonDaojdbc implements SocialPersonDao {
 			resultSet = pstmt.executeQuery();
 			
 			while(resultSet.next()){
-				String userId = resultSet.getString("email");
-				String userName = resultSet.getString("userName");
-				String password = resultSet.getString("password");				
-				SocialPerson person = new SocialPerson(userName, userId, password);
-				persons.add(person);
+				persons.add(convertSocialPerson(resultSet));
 			}}
 		catch (SQLException e) {
-			// TODO Auto-generated catch block
+			//
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("멤버목록조회 중 오류가 발생하였습니다.");
 		} finally{
-			quiet(resultSet, pstmt, conn);
+			closeQuietly(resultSet, pstmt, conn);
 		}
 		return persons;
 	}
 
 	@Override
 	public SocialPerson readPerson(String userId) {
+		//
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet resultSet = null;
@@ -59,19 +60,16 @@ public class SocialPersonDaojdbc implements SocialPersonDao {
 			pstmt.setString(1, userId);
 			resultSet = pstmt.executeQuery();
 			
-			while(resultSet.next()){
-				String email = resultSet.getString("email");
-				String name = resultSet.getString("userName");
-				String password = resultSet.getString("password");
-				
-				person = new SocialPerson(name, email, password);
+			if (resultSet.next()){
+				person = convertSocialPerson(resultSet);
 			}
 		
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			//
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("멤버조회 중 오류가 발생하였습니다.");
 		}finally{
-			quiet(resultSet, pstmt, conn);
+			closeQuietly(resultSet, pstmt, conn);
 		}		
 		
 		return person;
@@ -95,10 +93,11 @@ public class SocialPersonDaojdbc implements SocialPersonDao {
 			pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+			// 
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("멤버가입 중 오류가 발생하였습니다.");
 		}finally{
-			quiet(pstmt,conn);
+			closeQuietly(pstmt,conn);
 		}
 		
 	}
@@ -119,8 +118,9 @@ public class SocialPersonDaojdbc implements SocialPersonDao {
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("멤버삭제 중 오류가 발생하였습니다.");
 		}finally{
-			quiet(pstmt,conn);
+			closeQuietly(pstmt,conn);
 		}
 	}
 
@@ -137,34 +137,36 @@ public class SocialPersonDaojdbc implements SocialPersonDao {
 			pstmt.setString(1, person.getName());
 			pstmt.setString(2, person.getPassword());
 			pstmt.setString(3, person.getEmail());
-			pstmt.executeQuery();
+			
+			pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("정보수정 중 오류가 발생하였습니다.");
 		}finally{
-			quiet(pstmt, conn);
+			closeQuietly(pstmt, conn);
 		}
-		
-
 	}
-
-	
-	//소멸 메소드
-	private void quiet(ResultSet resultSet, PreparedStatement pstmt, Connection conn) {
-		if(resultSet!=null){
-			try {resultSet.close();} catch (SQLException e) {e.printStackTrace();}
-		}
-		quiet(pstmt,conn);
-	}
-	
-	private void quiet(PreparedStatement pstmt, Connection conn) {
-	
-		if(pstmt !=null){	
-			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
-		}
+//--------------------------------------------------------------------------
+	/**
+	 * 멤버조회결과를 SocialPerson 객체로 변환한다.
+	 * 
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
+	public SocialPerson convertSocialPerson(ResultSet resultSet) throws SQLException {
+		//
+		String email = resultSet.getString("email");
+		String name = resultSet.getString("userName");
+		String password = resultSet.getString("password");				
 		
-		if(conn!=null){
-			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
-		}	
+		SocialPerson person = new SocialPerson(name, email, password);
+		
+		return person;
 	}
 }
+
+
+
+	

@@ -21,77 +21,66 @@ import com.namoo.club.dao.factory.DaoFactory.DbType;
 import com.namoo.club.dao.jdbc.MariaDBDaoFactory;
 import com.namoo.club.domain.entity.SocialPerson;
 
-public class SocialPersonDaoTest {
+public class SocialPersonDaoTest extends DbCommonTest {
 
 	private SocialPersonDao dao;
-	IDatabaseTester databaseTester;
 
 	@Before
 	public void setUp() throws Exception {
+		super.setUp();
 		dao = MariaDBDaoFactory.createFactory(DbType.MariaDB).getSocialPersonDao();
-		prepareDatabaseTester();
-		databaseTester.setSetUpOperation(DatabaseOperation.REFRESH);
-		databaseTester.onSetup();
+	
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		dao.deletePerson("sss");
-		databaseTester.setTearDownOperation(DatabaseOperation.DELETE);
-		databaseTester.onTearDown();
-	}
-
-	private void prepareDatabaseTester() throws DataSetException, IOException {
-		String url = "jdbc:mariadb://192.168.0.10:3306/namooclubdb";
-		String driver = "org.mariadb.jdbc.Driver";
-		String username = "namoouser";
-		String password = "namoouser";
-
-		databaseTester = new JdbcDatabaseTester(driver, url, username, password);
-		databaseTester.setDataSet(readDataset());
-
-	}
-
-	private IDataSet readDataset() throws DataSetException, IOException {
-		InputStream is = this.getClass().getResourceAsStream("dataset.xml");
-		IDataSet dataset = new FlatXmlDataSet(is);
-		return dataset;
+		//
+		super.tearDown();
 	}
 
 	@Test
 	public void testReadAllPerson() {
-		
+		//
 		List<SocialPerson> persons = dao.readAllPerson();
-		int count = persons.size();
-		assertEquals(2, count);
+		assertEquals(2, persons.size());
 	}
 
 	@Test
 	public void testReadPerson() {
-		dao.readPerson("ksy5350@nate.com");
+		//
+		SocialPerson person = dao.readPerson("ksy5350@nate.com");
+		assertEquals("ksy5350@nate.com",person.getEmail());
 	}
 
+	@Test
 	public void testCreatePerson() {
 		
-		SocialPerson person = new SocialPerson("sss", "sss", "sss");
-		dao.createPerson(person);
-		assertEquals("sss", person.getName());
+		SocialPerson person = new SocialPerson();
+		person.setName("정효진");
+		person.setPassword("1234");
+		person.setEmail("jjj@nate.com");
+		
+		assertEquals("jjj@nate.com", person.getEmail());
+		
 	}
 
 	@Test
 	public void testDeletePerson() {
-		dao.readPerson("ksy5350@nate.com");
+		//
+		dao.deletePerson("ksy5350@nate.com");
+		assertNull(dao.readPerson("ksy5350@nate.com"));
 	}
 
 	@Test
 	public void testUpdatePerson() {
-		SocialPerson person = new SocialPerson("sss", "sss", "sss");
-		dao.createPerson(person);
-		person = dao.readPerson("ksy5350@nate.com");
-		person.setName("ssss");
+		//
+		SocialPerson person = dao.readPerson("ksy5350@nate.com");
+		person.setName("삼천포");
+		person.setPassword("1234");
 		dao.updatePerson(person);
-		person = dao.readPerson("sss");
-		assertEquals("ssss", person.getName());
+		
+		person = dao.readPerson("ksy5350@nate.com");
+		assertEquals("삼천포", person.getName());
 	}
 
 }

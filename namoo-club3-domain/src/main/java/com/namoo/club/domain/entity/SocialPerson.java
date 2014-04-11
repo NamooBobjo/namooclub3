@@ -45,4 +45,8 @@ public class SocialPerson{
 		return email;
 	}
 
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 }
