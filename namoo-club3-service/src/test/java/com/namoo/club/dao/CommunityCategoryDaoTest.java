@@ -21,79 +21,51 @@ import com.namoo.club.dao.CommunityCategoryDao;
 import com.namoo.club.dao.SocialPersonDao;
 import com.namoo.club.dao.factory.DaoFactory.DbType;
 import com.namoo.club.dao.jdbc.MariaDBDaoFactory;
+import com.namoo.club.domain.entity.Category;
 
-public class CommunityCategoryDaoTest {
+public class CommunityCategoryDaoTest extends DbCommonTest {
+	
 	private CommunityCategoryDao dao;
-	IDatabaseTester databaseTester;
 
 	
 	@Before
 	public void setUp() throws Exception {
+		super.setUp();
 		dao = MariaDBDaoFactory.createFactory(DbType.MariaDB).getCommunityCategoryDao();
-		prepareDatabaseTester();
-		databaseTester.setSetUpOperation(DatabaseOperation.REFRESH);
-		databaseTester.onSetup();
+	
 	}
 
 	@After
 	public void tearDown() throws Exception {		
-		databaseTester.setTearDownOperation(DatabaseOperation.DELETE);
-		databaseTester.onTearDown();
-	}
-
-	private void prepareDatabaseTester() throws DataSetException, IOException {
-		String url = "jdbc:mariadb://192.168.0.10:3306/namooclubdb";
-		String driver = "org.mariadb.jdbc.Driver";
-		String username = "namoouser";
-		String password = "namoouser";
-
-		databaseTester = new JdbcDatabaseTester(driver, url, username, password);
-		databaseTester.setDataSet(readDataset());
-
-	}
-
-	private IDataSet readDataset() throws DataSetException, IOException {
-		InputStream is = this.getClass().getResourceAsStream("dataset.xml");
-		IDataSet dataset = new FlatXmlDataSet(is);
-		return dataset;
+		super.tearDown();
 	}
 
 	@Test
 	public void testReadAllCategory() {
-		List<String> categories = dao.readAllCategory(1);
-		String baseball ="";
-		String volley ="";
-		for(String cate : categories){
-			if(cate.equals("야구")){
-				baseball = cate;
-			}
-			else if(cate.equals("배구")){
-				volley = cate;
-			}
-		}
+		List<Category> categories = dao.readAllCategory(1);
 		
-		assertEquals("야구", baseball);
-		assertEquals("배구", volley);
+		assertEquals(2, categories.size());
 	}
 
 	@Test
 	public void testReadCategory() {
-		String category = dao.readCategory(1,9);
-		assertEquals("야구", category);
+		Category category = dao.readCategory(1, 1);
+		assertEquals("한국요리", category.getName());
 	}
 
 	@Test
 	public void testDeleteCategory() {
 		dao.deleteCategory(1);
+		assertNull(dao.readCategory(1, 1));
 	}
 
 	@Test
 	public void testCreateCategory() {
-		List<String> category = new ArrayList<>();
-		category.add("야구");
-		category.add("농구");
-		category.add("배구");
-		dao.createCategory(1, category);
+		Category category = new Category();
+		category.setName("한국요리");
+		category.setCmId(1);
+		
+		assertEquals("한국요리", category.getName());
 		
 	}
 

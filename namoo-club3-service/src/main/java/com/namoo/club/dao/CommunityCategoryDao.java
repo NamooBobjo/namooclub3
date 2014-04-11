@@ -2,11 +2,13 @@ package com.namoo.club.dao;
 
 import java.util.List;
 
+import com.namoo.club.domain.entity.Category;
+
 public interface CommunityCategoryDao {
 
-	List<String> readAllCategory(int cmId);
-	String readCategory(int cmId, int cgId);
+	List<Category> readAllCategory(int cmId);
+	Category readCategory(int cmId, int cgId);
 	void deleteCategory(int cmId);
-	void createCategory(int cmId, List<String> category);
+	void createCategory(int cmId, Category category);
 	
 }

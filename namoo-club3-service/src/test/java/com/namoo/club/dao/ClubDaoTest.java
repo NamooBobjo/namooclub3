@@ -35,15 +35,28 @@ public class ClubDaoTest extends DbCommonTest {
 	public void testReadAllClub() {
 		//
 		List<Club> clubs = dao.readAllClub();
-		
-		assertEquals(2,clubs.size());		
+		assertEquals(2,clubs.size());	
+			
 		}
+	
+	@Test
+	public void testReadAllClubByCmId() {
+		//
+		List<Club> clubs = dao.readAllClub(1);
+		assertEquals(2,clubs.size());		
+	}
 
+	
 	@Test
 	public void testReadClub() {
 		//
-		
 		Club club = dao.readClub(1);
+		assertEquals("한식", club.getName());
+	}
+	@Test
+	public void testReadClubByName() {
+		//
+		Club club = dao.readClubByName("한식");
 		assertEquals("한식", club.getName());
 	}
 

@@ -4,6 +4,7 @@ public class Category {
 	//
 	private int id;
 	private String name;
+	private int cmId;
 	
 	//--------------------------------------------------------------------------
 	// constructor
@@ -18,8 +19,16 @@ public class Category {
 		this.name = name;
 	}
 	
+	public Category(int cmId, int cgId, String cgName) {
+		//
+		this.cmId = cmId;
+		this.id = cgId;
+		this.name = cgName;
+		
+	}
 	//--------------------------------------------------------------------------
 	
+
 	public int getId() {
 		return id;
 	}
@@ -31,5 +40,13 @@ public class Category {
 	}
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getCmId() {
+		return cmId;
+	}
+
+	public void setCmId(int cmId) {
+		this.cmId = cmId;
 	}
 }
