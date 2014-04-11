@@ -26,7 +26,7 @@ public class TownerServiceLogic implements TownerService {
 		// 
 		SocialPerson towner = dao.readPerson(email);								
 		if (towner != null && towner.getPassword().equals(password)) {
-			return true;
+			return true; 
 		}
 		
 		return false;
@@ -36,7 +36,7 @@ public class TownerServiceLogic implements TownerService {
 	public void registTowner(String name, String email, String password) {
 		// 
 		if (dao.readPerson(email) != null) {
-			throw new RuntimeException("해당 주민이 이미 존재합니다. 등록할 수 없습니다.");
+			throw new NamooRuntimeException("해당 주민이 이미 존재합니다. 등록할 수 없습니다.");
 		}
 		
 		SocialPerson towner = new SocialPerson(name, email, password);
