@@ -78,7 +78,7 @@
 								</li>
 							</c:forEach>
 
-							<c:forEach var="community" items="${belongCommunities}" 	varStatus="list">
+							<c:forEach var="community" items="${joinedCommunities}" 	varStatus="list">
 
 								<li class="list-group-item"><span class="badge">
 								<fmt:formatDate value="${community.openDate}" pattern="yyyy-MM-dd" /></span>
@@ -99,7 +99,7 @@
 						</div>
 
 						<ul class="list-group">
-							<c:forEach var="community" items="${communities}"
+							<c:forEach var="community" items="${unjoinedCommunities}"
 								varStatus="list">
 								<li class="list-group-item"><span class="badge"><fmt:formatDate
 											value="${community.openDate}" pattern="yyyy-MM-dd" /></span>

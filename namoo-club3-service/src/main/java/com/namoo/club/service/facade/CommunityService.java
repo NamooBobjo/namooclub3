@@ -8,16 +8,6 @@ import com.namoo.club.domain.entity.CommunityMember;
 
 
 public interface CommunityService {
-
-	/**
-	 * 
-	 * @param communityName
-	 * @param adminName
-	 * @param email
-	 * @param password
-	 */
-	@Deprecated
-	public void registCommunity(String communityName, String adminName, String email, String password);
 	
 	/**
 	 * [주민으로 등록되지 않은 경우] 커뮤니티 개설
@@ -121,7 +111,15 @@ public interface CommunityService {
 	 * @param email
 	 * @return
 	 */
-	public List<Community> findBelongCommunities(String email);
+	public List<Community> findJoinedCommunities(String email);
+
+	/**
+	 * 가입하지 않은 커뮤니티 목록조회
+	 * 
+	 * @param email
+	 * @return
+	 */
+	public List<Community> findAllUnjoinedCommunities(String email);
 	
 	/**
 	 * 자신이 관리하는 커뮤니티 목록조회

@@ -13,5 +13,8 @@ public interface CommunityDao {
 	int createCommunity(Community community);
 	void deleteCommunity(int cmId);
 	void updateCommunity(Community community);
-
+	
+	List<Community> readJoinedCommunities(String email);
+	List<Community> readManagedCommunities(String email);
+	List<Community> readUnjoinedCommunities(String email);
 }

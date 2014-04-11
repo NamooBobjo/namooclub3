@@ -94,36 +94,6 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 	}
 
 	@Override
-	public List<Integer> readManagedid(String email) {
-		
-		Connection conn = null;
-		ResultSet resultSet = null;
-		PreparedStatement pstmt = null;
-		List<Integer> idList = new ArrayList<>();
-		
-		try {
-			conn = DbConnection.getConnection();
-			String sql = "SELECT email, id, kind, mainManager FROM member WHERE kind = '1' AND mainManager = '1' AND email = ?";
-			pstmt = conn.prepareStatement(sql);
-			
-			pstmt.setString(1, email);
-			resultSet = pstmt.executeQuery();
-			
-			while(resultSet.next()){
-				int id = resultSet.getInt("id");
-				idList.add(id);
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw NamooExceptionFactory.createRuntime("관리자ID 조회 중 오류가 발생하였습니다.");
-		}finally{
-			closeQuietly(resultSet, pstmt, conn);
-		}
-		return idList;
-	}
-	
-	@Override
 	public List<ClubMember> readClubMembers(int clId) {
 		//
 		Connection conn = null;

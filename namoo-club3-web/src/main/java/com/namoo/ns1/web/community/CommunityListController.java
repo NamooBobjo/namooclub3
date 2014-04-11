@@ -37,46 +37,20 @@ public class CommunityListController extends HttpServlet{
 		TownerService townerservice = NamooClubServiceFactory.getInstance().getTownerService();
 		HttpSession session = req.getSession();
 		
-		
-		List<Community> belongCommunities = null;
-		List<Community> communities = null;
-		List<Community> managedCommunities = null;
-			
-		String loginID = (String) session.getAttribute("loginID");
-		
-		
-		// 전체 커뮤니티 목록 조회
-		if(!service.findAllCommunities().isEmpty()){
-			communities = service.findAllCommunities();
-		}		
-		
-		// 가입된 커뮤니티 목록 조회
-		belongCommunities = service.findBelongCommunities(loginID);
-		
-		// 미가입 커뮤니티
-		if(!belongCommunities.isEmpty()){
-			for(Community community : belongCommunities){
-				communities.remove(community);
-			}	
-		}		
-		req.setAttribute("communities", communities);
+		// 
+		String loginEmail = (String) session.getAttribute("loginID");
 
-		// 관리중인 커뮤니티
-		managedCommunities = service.findManagedCommnities(loginID);
+		List<Community> unjoinedCommunities = service.findAllUnjoinedCommunities(loginEmail);
+		req.setAttribute("unjoinedCommunities", unjoinedCommunities);
+		
+		List<Community> joinedCommunities = service.findJoinedCommunities(loginEmail);
+		req.setAttribute("joinedCommunities", joinedCommunities);
+		
+		List<Community> managedCommunities = service.findManagedCommnities(loginEmail);
 		req.setAttribute("managedCommunities", managedCommunities);
-
-		// 관리하지 않는 가입중인 커뮤니티
-		if(!managedCommunities.isEmpty()){
-			if(!belongCommunities.isEmpty()){
-				for(Community community : managedCommunities){
-					belongCommunities.remove(community);
-				}
-			}
-		}
-		req.setAttribute("belongCommunities", belongCommunities);
 		
 		// 로그인 사용자 이름
-		String loginUser = townerservice.findTowner(loginID).getName();
+		String loginUser = townerservice.findTowner(loginEmail).getName();
 		req.setAttribute("loginUser", loginUser);
 		
 		// 포워딩

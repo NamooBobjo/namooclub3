@@ -29,12 +29,7 @@ public class CommunityDaojdbc extends JdbcDaoTemplate implements CommunityDao {
 			resultSet = pstmt.executeQuery();
 			
 			while(resultSet.next()){
-				int cmId = resultSet.getInt("cmid");
-				String cmName = resultSet.getString("cmName");
-				String cmDescription = resultSet.getString("cmDescription");
-				Date cmDate = resultSet.getDate("cmDate");
-				
-				Community community = new Community(cmId, cmName, cmDescription, cmDate);
+				Community community = convertToCommunity(resultSet);
 				communities.add(community);
 			}
 		} catch (SQLException e) {
@@ -46,6 +41,73 @@ public class CommunityDaojdbc extends JdbcDaoTemplate implements CommunityDao {
 		return communities;
 	}
 
+	/**
+	 * 조회결과를 커뮤니티 객체로 변환한다.
+	 * 
+	 * @param resultSet
+	 * @return
+	 * @throws SQLException
+	 */
+	private Community convertToCommunity(ResultSet resultSet) throws SQLException {
+		// 
+		int cmId = resultSet.getInt("cmid");
+		String cmName = resultSet.getString("cmName");
+		String cmDescription = resultSet.getString("cmDescription");
+		Date cmDate = resultSet.getDate("cmDate");
+		
+		Community community = new Community(cmId, cmName, cmDescription, cmDate);
+		return community;
+	}
+
+	@Override
+	public List<Community> readJoinedCommunities(String email) {
+		// 
+		String sql = "SELECT cmid, cmName, cmDescription, cmDate FROM community WHERE email = ?";
+		
+		return readCommunitiesWithSql(sql, email);
+	}
+
+	@Override
+	public List<Community> readManagedCommunities(String email) {
+		// 
+		String sql = "SELECT cmid, cmName, cmDescription, cmDate FROM community WHERE email = ?";
+		
+		return readCommunitiesWithSql(sql, email);
+	}
+
+	@Override
+	public List<Community> readUnjoinedCommunities(String email) {
+		// 
+		String sql = "SELECT cmid, cmName, cmDescription, cmDate FROM community WHERE email = ?";
+		
+		return readCommunitiesWithSql(sql, email);
+	}
+	
+	private List<Community> readCommunitiesWithSql(String sql, String email) {
+		Connection conn = null;
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		List<Community> communities = null;
+		try {
+			conn = DbConnection.getConnection();
+			communities = new ArrayList<>();
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, email);
+			resultSet = pstmt.executeQuery();
+			
+			while(resultSet.next()){
+				Community community = convertToCommunity(resultSet);
+				communities.add(community);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("readCommunitiesWithSql 오류");
+		}finally{
+			closeQuietly(resultSet, pstmt, conn);
+		}
+		return communities;
+	}
+	
 	@Override
 	public Community readCommunity(int communityId) {
 		//
@@ -183,4 +245,5 @@ public class CommunityDaojdbc extends JdbcDaoTemplate implements CommunityDao {
 			closeQuietly(pstmt, conn);
 		}
 	}
+
 }

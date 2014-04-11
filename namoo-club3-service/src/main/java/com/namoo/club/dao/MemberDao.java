@@ -11,7 +11,6 @@ public interface MemberDao {
 
 	List<CommunityMember> readCommunityMembers(int cmId);
 	List<ClubMember> readClubMembers(int clId);
-	List<Integer> readManagedid(String email);
 	ClubMember readClubMember(int clId, String email);
 	
 	void joinAsCommunityMember(int cmid, int mainManager,SocialPerson person);

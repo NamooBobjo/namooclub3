@@ -29,16 +29,6 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 	
 	@Override
-	@Deprecated
-	public void registCommunity(String communityName, String adminName, String email, String password){
-		//
-		SocialPerson admin = createPerson(adminName, email, password);
-		Community community = new Community(communityName, "", admin);
-		
-		cmDao.createCommunity(community);
-	}
-
-	@Override
 	public void registCommunity(String communityName, String description, String adminName, String email, String password) {
 		//
 		if (isExistCommunityByName(communityName)) {
@@ -217,31 +207,15 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 
 	@Override
-	public List<Community> findBelongCommunities(String email) {
+	public List<Community> findJoinedCommunities(String email) {
 		// 
-		List<Community> commnities = cmDao.readAllCommunity();
-		if (commnities == null) return null;
-		
-		List<Community> belongs = new ArrayList<>();
-		for (Community community : commnities) {
-			if (community.findMember(email) != null) {
-				belongs.add(community);
-			}
-		}
-		return belongs;
+		return cmDao.readJoinedCommunities(email);
 	}
 
 	@Override
 	public List<Community> findManagedCommnities(String email) {
 		// 
-		List<Community> communities =  new ArrayList<>();
-		List<Integer> idList = mbDao.readManagedid(email);
-		for(int i : idList){
-			Community community = cmDao.readCommunity(i);
-			communities.add(community);
-		}
-		
-		return communities;
+		return cmDao.readManagedCommunities(email);
 	}
 
 	@Override
@@ -260,5 +234,11 @@ public class CommunityServiceLogic implements CommunityService {
 		
 		findCm.removeMember(email);
 		cmDao.createCommunity(findCm);
+	}
+
+	@Override
+	public List<Community> findAllUnjoinedCommunities(String email) {
+		// 
+		return cmDao.readUnjoinedCommunities(email);
 	}
 }
