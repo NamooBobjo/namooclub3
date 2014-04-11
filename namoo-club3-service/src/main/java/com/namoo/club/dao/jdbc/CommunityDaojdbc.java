@@ -127,7 +127,7 @@ public class CommunityDaojdbc implements CommunityDao {
 			
 			result = pstmt.getGeneratedKeys();
 			if(result.next()) {
-				cmId = result.getInt("cmid");
+				cmId = result.getInt(1);
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
