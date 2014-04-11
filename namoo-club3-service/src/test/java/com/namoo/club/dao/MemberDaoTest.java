@@ -1,6 +1,6 @@
 package com.namoo.club.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
@@ -9,6 +9,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.namoo.club.dao.jdbc.MemberDaojdbc;
+import com.namoo.club.domain.entity.ClubMember;
+import com.namoo.club.domain.entity.CommunityMember;
 import com.namoo.club.domain.entity.SocialPerson;
 
 public class MemberDaoTest extends DbCommonTest{
@@ -29,13 +31,13 @@ public class MemberDaoTest extends DbCommonTest{
 	@Test
 	public void testReadCommunityMember() {
 		//
-		List<SocialPerson> test = dao.readCommunityMembers(1);
+		List<CommunityMember> test = dao.readCommunityMembers(1);
 		assertEquals(1, test.size());
 	}
 
 	@Test
 	public void testReadClubMember() {
-		List<SocialPerson> test = dao.readClubMembers(1);
+		List<ClubMember> test = dao.readClubMembers(1);
 		assertEquals(1, test.size());
 	}
 
@@ -44,7 +46,7 @@ public class MemberDaoTest extends DbCommonTest{
 		SocialPerson person = new SocialPerson("yong", "yong@nate.com", "1234");
 		
 		dao.joinAsCommunityMember(1, 1, person);
-		List<SocialPerson> test = dao.readCommunityMembers(1);
+		List<CommunityMember> test = dao.readCommunityMembers(1);
 		assertEquals(2, test.size());
 	}
 
@@ -52,24 +54,31 @@ public class MemberDaoTest extends DbCommonTest{
 	public void testJoinAsClubMember() {
 		SocialPerson person = new SocialPerson("yong", "yong@nate.com", "1234");		
 		dao.joinAsClubMember(1, 0, person);
-		List<SocialPerson> test = dao.readClubMembers(1);
+		List<ClubMember> test = dao.readClubMembers(1);
 		assertEquals(2, test.size());
 	}
 
 	@Test
 	public void testDeleteCommunityMember() {
+		int beforeCount = dao.readCommunityMembers(1).size();
 		dao.deleteCommunityMember(1, "jjj@nate.com");
-		assertNull(dao.readCommunityMembers(1));
+		int afterCount = dao.readCommunityMembers(1).size();
+		assertEquals(beforeCount - 1, afterCount);
 	}
 
 	@Test
 	public void testDeleteClubMember() {
-		dao.deleteClubMember(16, "yong@nate.com");
+		int brforeCount = dao.readClubMembers(1).size();
+		dao.deleteClubMember(1, "sss@nate.com");
+		int afterCount = dao.readClubMembers(1).size();
+		assertEquals(afterCount + 1, brforeCount);
 	}
 
 	@Test
 	public void testUpdateClubMember() {
-		dao.updateClubMember(16, "yong@nate.com", 1);
+		SocialPerson person = new SocialPerson();
+		ClubMember clmem = new ClubMember("123", person);
+		
+		dao.updateClubManager(1, person.getEmail(), 1);
 	}
-
 }

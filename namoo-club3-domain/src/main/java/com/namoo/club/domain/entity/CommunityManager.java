@@ -32,6 +32,14 @@ public class CommunityManager  {
 		// 
 		return rolePerson.getEmail();
 	}
+
+	public String getCommunityName() {
+		return communityName;
+	}
+
+	public void setCommunityName(String communityName) {
+		this.communityName = communityName;
+	}
 	
 
 }

@@ -12,8 +12,7 @@ import com.namoo.club.dao.CommunityDao;
 import com.namoo.club.domain.entity.Community;
 import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 
-
-public class CommunityDaojdbc implements CommunityDao {
+public class CommunityDaojdbc extends JdbcDaoTemplate implements CommunityDao {
 	//
 	@Override
 	public List<Community> readAllCommunity() {
@@ -38,12 +37,11 @@ public class CommunityDaojdbc implements CommunityDao {
 				Community community = new Community(cmId, cmName, cmDescription, cmDate);
 				communities.add(community);
 			}
-			
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw NamooExceptionFactory.createRuntime("readAllCommunity 오류");
 		}finally{
-			quiet(resultSet, pstmt, conn);
+			closeQuietly(resultSet, pstmt, conn);
 		}
 		return communities;
 	}
@@ -74,7 +72,7 @@ public class CommunityDaojdbc implements CommunityDao {
 		} catch (SQLException e) {
 			throw NamooExceptionFactory.createRuntime("readCommunity 오류");
 		}finally{
-			quiet(resultSet, pstmt, conn);
+			closeQuietly(resultSet, pstmt, conn);
 		}
 		return community;
 	}
@@ -104,7 +102,7 @@ public class CommunityDaojdbc implements CommunityDao {
 			e.printStackTrace();
 			throw NamooExceptionFactory.createRuntime("readCommunity 오류");
 		}finally{
-			quiet(resultSet, pstmt, conn);
+			closeQuietly(resultSet, pstmt, conn);
 		}
 		return community;
 	}
@@ -133,7 +131,7 @@ public class CommunityDaojdbc implements CommunityDao {
 			e.printStackTrace();
 			throw NamooExceptionFactory.createRuntime("createCommunity 오류");
 		}finally{
-			quiet(result, pstmt, conn);
+			closeQuietly(result, pstmt, conn);
 		}
 		return cmId;
 	}
@@ -158,7 +156,7 @@ public class CommunityDaojdbc implements CommunityDao {
 			e.printStackTrace();
 			throw NamooExceptionFactory.createRuntime("deleteCommunity 오류");
 		}finally{
-			quiet(pstmt, conn);
+			closeQuietly(pstmt, conn);
 		}
 	}
 
@@ -182,41 +180,7 @@ public class CommunityDaojdbc implements CommunityDao {
 			e.printStackTrace();
 			throw NamooExceptionFactory.createRuntime("updateCommunity 오류");
 		}finally{
-			quiet(pstmt, conn);
+			closeQuietly(pstmt, conn);
 		}
 	}
-
-		// 소멸 메소드
-		private void quiet(ResultSet resultSet, PreparedStatement pstmt,
-				Connection conn) {
-			if (resultSet != null) {
-				try {
-					resultSet.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-			quiet(pstmt, conn);
-		}
-
-		private void quiet(PreparedStatement pstmt, Connection conn) {
-
-			if (pstmt != null) {
-				try {
-					pstmt.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-
-	
 }

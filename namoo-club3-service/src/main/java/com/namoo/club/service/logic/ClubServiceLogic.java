@@ -97,8 +97,8 @@ public class ClubServiceLogic implements ClubService {
 
 	private boolean isExistMember(int clId, String email) {
 		
-		List<SocialPerson> persons = memberdao.readClubMembers(clId);
-		for(SocialPerson person : persons){
+		List<ClubMember> persons = memberdao.readClubMembers(clId);
+		for(ClubMember person : persons){
 			if(person.getEmail().equals(email)){
 				return true;
 			}
@@ -157,14 +157,9 @@ public class ClubServiceLogic implements ClubService {
 		}
 		
 		Integer clId = club.getId();
-		List<SocialPerson> persons = memberdao.readClubMembers(clId);
-		List<ClubMember> clubmembers= new ArrayList<>();
-
-		for(SocialPerson person : persons){
-			ClubMember member = new ClubMember(clubName, person);
-			clubmembers.add(member);
-		}		
-		return clubmembers;
+		List<ClubMember> persons = memberdao.readClubMembers(clId);
+		
+		return persons;
 	}
 
 	@Override

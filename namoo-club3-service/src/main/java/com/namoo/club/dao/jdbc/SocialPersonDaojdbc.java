@@ -8,8 +8,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.namoo.club.dao.SocialPersonDao;
-import com.namoo.club.domain.entity.Category;
-import com.namoo.club.domain.entity.Club;
 import com.namoo.club.domain.entity.SocialPerson;
 import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 

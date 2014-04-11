@@ -23,7 +23,12 @@ public class ClubMember  {
 	public String getEmail(){
 		return rolePerson.getEmail();
 	}
-	
-	
 
+	public String getClubName() {
+		return clubName;
+	}
+
+	public void setClubName(String clubName) {
+		this.clubName = clubName;
+	}
 }

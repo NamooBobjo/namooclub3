@@ -8,38 +8,46 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.namoo.club.dao.MemberDao;
-import com.namoo.club.dao.SocialPersonDao;
-import com.namoo.club.dao.factory.DaoFactory.DbType;
+import com.namoo.club.domain.entity.ClubMember;
+import com.namoo.club.domain.entity.CommunityMember;
 import com.namoo.club.domain.entity.SocialPerson;
 
-public class MemberDaojdbc implements MemberDao {
+public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 
 	@Override
-	public List<SocialPerson> readCommunityMembers(int cmId) {
+	public List<CommunityMember> readCommunityMembers(int cmId) {
 		//
 		Connection conn = null;
 		ResultSet resultSet = null;
 		PreparedStatement pstmt = null;
-		List<SocialPerson> communityMembers = new ArrayList<>();
+		List<CommunityMember> communityMembers = new ArrayList<>();
 		
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "SELECT email, id, kind, mainManager FROM member WHERE kind = 1 and id = ?";
+			String sql = "SELECT a.email, a.id, c.cmName, a.kind, a.mainManager, b.username FROM member a " +
+					"INNER JOIN socialPerson b ON a.email = b.email " + 
+					"INNER JOIN community c ON a.id = c.cmId " + 
+					"WHERE kind = 1 and id = ?";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setInt(1, cmId);
 			resultSet = pstmt.executeQuery();
 			
 			while(resultSet.next()){
-				String email = resultSet.getString("email");
-				SocialPerson person = findPerson(email);
-				communityMembers.add(person);
+				SocialPerson rolePerson = new SocialPerson();
+				rolePerson.setEmail(resultSet.getString("email"));
+				rolePerson.setName(resultSet.getString("username"));
+				
+				String communityName = resultSet.getString("cmName");
+				CommunityMember member = new CommunityMember(communityName, rolePerson);
+				
+				communityMembers.add(member);
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			quiet(resultSet, pstmt, conn);
+			closeQuietly(resultSet, pstmt, conn);
 		}
 		return communityMembers;
 	}
@@ -54,7 +62,7 @@ public class MemberDaojdbc implements MemberDao {
 		
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "SELECT email, id, kind, mainManager FROM member WHERE kind = 1 AND mainManager = 1 AND email = ?";
+			String sql = "SELECT email, id, kind, mainManager FROM member WHERE kind = '1' AND mainManager = '1' AND email = ?";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setString(1, email);
@@ -68,47 +76,48 @@ public class MemberDaojdbc implements MemberDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			quiet(resultSet, pstmt, conn);
+			closeQuietly(resultSet, pstmt, conn);
 		}
 		return idList;
 	}
-	public SocialPerson findPerson(String email){
-				
-		SocialPersonDao dao = MariaDBDaoFactory.createFactory(DbType.MariaDB).getSocialPersonDao();
-		SocialPerson person = dao.readPerson(email);
-		
-		return person;
-	}
+	
 	@Override
-	public List<SocialPerson> readClubMembers(int clId) {
+	public List<ClubMember> readClubMembers(int clId) {
 		
 		Connection conn = null;
 		ResultSet resultSet = null;
 		PreparedStatement pstmt = null;
-		List<SocialPerson> clubMembers = new ArrayList<>();
+		List<ClubMember> clubMembers = new ArrayList<>();
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "SELECT email, id, kind, mainManager, manager FROM member WHERE kind = 2 AND id = ?";
+			String sql = "SELECT a.email, a.id, c.clName, a.kind, a.mainManager, a.manager, b.username FROM member a " +
+					"INNER JOIN socialPerson b ON a.email = b.email " +
+					"INNER JOIN club c ON a.id = c.clId " +
+					"WHERE kind = '2' AND id = ?";
 			pstmt = conn.prepareStatement(sql);
 			
 			pstmt.setInt(1, clId);
 			resultSet = pstmt.executeQuery();
 			
 			while(resultSet.next()){
-				String email = resultSet.getString("email");
-				SocialPerson person = findPerson(email);
-				clubMembers.add(person);
+				SocialPerson rolePerson = new SocialPerson();
+				rolePerson.setEmail(resultSet.getString("email"));
+				rolePerson.setName(resultSet.getString("username"));
+				
+				String clubName = resultSet.getString("clName");
+				ClubMember member = new ClubMember(clubName, rolePerson); 
+				
+				clubMembers.add(member);
 			}
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			quiet(resultSet, pstmt, conn);
+			closeQuietly(resultSet, pstmt, conn);
 		}
+		
 		return clubMembers;
 	}
-
-
 
 	@Override
 	public void joinAsCommunityMember(int cmId, int mainManager, SocialPerson person) {
@@ -126,7 +135,7 @@ public class MemberDaojdbc implements MemberDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			quiet(pstmt, conn);
+			closeQuietly(pstmt, conn);
 		}
 	}
 
@@ -147,7 +156,7 @@ public class MemberDaojdbc implements MemberDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			quiet(pstmt, conn);
+			closeQuietly(pstmt, conn);
 		}
 	}
 
@@ -158,18 +167,17 @@ public class MemberDaojdbc implements MemberDao {
 		PreparedStatement pstmt = null;
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "DELETE FROM member WHERE email = ? AND kind = 1 AND id = ?";
+			String sql = "DELETE FROM member WHERE email = ? AND kind = '1' AND id = ?";
 			
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, email);
 			pstmt.setInt(2, cmId);			
-			pstmt.executeQuery();
-			
+			pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			quiet(pstmt, conn);
+			closeQuietly(pstmt, conn);
 		}
 	}
 	
@@ -186,18 +194,18 @@ public class MemberDaojdbc implements MemberDao {
 			pstmt.setString(1, email);
 			pstmt.setInt(2, clId);
 			
-			pstmt.executeQuery();
+			pstmt.executeUpdate();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			quiet(pstmt, conn);
+			closeQuietly(pstmt, conn);
 		}
 	}
 
 
 	@Override
-	public void updateClubMember(int clId, String email, int manager) {
+	public void updateClubManager(int clId, String email, int manager) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		try {
@@ -214,29 +222,8 @@ public class MemberDaojdbc implements MemberDao {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
-			quiet(pstmt, conn);
+			closeQuietly(pstmt, conn);
 		}
 	}
-	
-	
-	//소멸 메소드
-	private void quiet(ResultSet resultSet, PreparedStatement pstmt, Connection conn) {
-		if(resultSet!=null){
-			try {resultSet.close();} catch (SQLException e) {e.printStackTrace();}
-		}
-		quiet(pstmt,conn);
-	}
-	
-	private void quiet(PreparedStatement pstmt, Connection conn) {
-	
-		if(pstmt !=null){	
-			try {pstmt.close();} catch (SQLException e) {e.printStackTrace();}
-		}
-		
-		if(conn!=null){
-			try {conn.close();} catch (SQLException e) {e.printStackTrace();}
-		}	
-	}
-
 }
 
