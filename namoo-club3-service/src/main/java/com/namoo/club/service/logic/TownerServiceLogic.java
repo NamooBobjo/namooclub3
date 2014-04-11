@@ -47,14 +47,12 @@ public class TownerServiceLogic implements TownerService {
 	public void removeTowner(String email) {
 		// 
 		// 커뮤니티의 회원으로 가입된 경우 삭제하지 못한다.
-		List<Community> communities = comdao.readAllCommunity();
-		if (communities != null) {
-			for (Community community : communities) {
-				if (community.findMember(email) != null) {
-					throw new NamooRuntimeException(
-							"커뮤니티에 가입된 회원은 삭제할 수 없습니다. 먼저 커뮤니티를 탈퇴하세요. ["+community.getName()+"]");
-				}
-			}
+		CommunityDao communityDao = DaoFactory.createFactory(DbType.MariaDB).getCommunityDao();
+		
+		List<Community> communities = communityDao.readJoinedCommunities(email);
+		if (communities != null && !communities.isEmpty()) {
+			throw new NamooRuntimeException(
+				"커뮤니티에 가입된 회원은 삭제할 수 없습니다. 먼저 커뮤니티를 탈퇴하세요. ["+communities.get(0).getName()+"]");
 		}
 		
 		dao.deletePerson(email);

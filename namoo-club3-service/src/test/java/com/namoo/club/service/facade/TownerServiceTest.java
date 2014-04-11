@@ -3,6 +3,7 @@ package com.namoo.club.service.facade;
 import static org.junit.Assert.*;
 
 import java.security.Provider.Service;
+import java.util.List;
 
 import org.junit.After;
 import org.junit.Before;
@@ -53,6 +54,7 @@ public class TownerServiceTest extends DbCommonTest {
 		townerService.registTowner(name, email, password);
 	}
 	
+	
 	@Test
 	public void testRegistTowner() {
 		//
@@ -69,20 +71,34 @@ public class TownerServiceTest extends DbCommonTest {
 		assertEquals(password, towner.getPassword());
 
 	}
+	
+	@Test(expected=NamooRuntimeException.class)
+	public void testRemoveTownerWithException() {
+		// 커뮤니티의 회원으로 가입된 경우 삭제하지 못한다.
+		townerService.removeTowner("jjj@nate.com");
+	}
 
 	@Test
 	public void testRemoveTowner() {
-		fail("Not yet implemented");
+		//
+		String email = "ksy5350@nate.com";
+		townerService.removeTowner(email);
+		
+		assertNull(townerService.findTowner(email));
 	}
 
 	@Test
 	public void testFindTowner() {
-		fail("Not yet implemented");
+		//
+		SocialPerson towner = townerService.findTowner("ksy5350@nate.com");
+		assertEquals("ksy5350@nate.com", towner.getEmail());
 	}
 
 	@Test
 	public void testFindAllTowner() {
-		fail("Not yet implemented");
+		//
+		List<SocialPerson> persons = townerService.findAllTowner();
+		assertEquals(3, persons.size());
 	}
 
 }
