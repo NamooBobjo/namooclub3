@@ -38,7 +38,14 @@ public class CommunityDaoTest extends DbCommonTest{
 	}
 	
 	@Test
-	public void testReadCommunity(){
+	public void testReadCommunityById(){
+		Community community = dao.readCommunity("요리커뮤니티");
+		
+		assertEquals(1, community.getId());
+	}
+	
+	@Test
+	public void testReadCommunityByName(){
 		Community community = dao.readCommunity(1);
 		
 		assertEquals("요리커뮤니티", community.getName());
@@ -78,5 +85,32 @@ public class CommunityDaoTest extends DbCommonTest{
 		
 		community = dao.readCommunity(1);
 		assertEquals("아아아아아아아", community.getName());
+	}
+	
+	@Test
+	public void testReadJoinedCommunities(){
+		//
+		String email = "jjj@nate.com";
+		List<Community> community = dao.readJoinedCommunities(email);
+		
+		assertEquals(1, community.size());
+	}
+	
+	@Test
+	public void testReadManagedCommunities(){
+		//
+		String email = "jjj@nate.com";
+		List<Community> community = dao.readManagedCommunities(email);
+		
+		assertEquals(1, community.size());
+	}
+	
+	@Test
+	public void testReadUnjoinedCommunities(){
+		//
+		String email = "sss@nate.com";
+		List<Community> community = dao.readUnjoinedCommunities(email);
+		
+		assertEquals(1, community.size());
 	}
 }
