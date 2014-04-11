@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.namoo.club.dao.jdbc.MemberDaojdbc;
-import com.namoo.club.domain.entity.ClubManager;
 import com.namoo.club.domain.entity.ClubMember;
 import com.namoo.club.domain.entity.CommunityMember;
 import com.namoo.club.domain.entity.SocialPerson;

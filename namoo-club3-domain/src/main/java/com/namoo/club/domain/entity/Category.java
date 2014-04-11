@@ -24,10 +24,14 @@ public class Category {
 		this.cmId = cmId;
 		this.id = cgId;
 		this.name = cgName;
-		
 	}
-	//--------------------------------------------------------------------------
 	
+	public Category(String categoryName) {
+		// 
+		this.name = categoryName;
+	}
+	
+	//--------------------------------------------------------------------------
 
 	public int getId() {
 		return id;

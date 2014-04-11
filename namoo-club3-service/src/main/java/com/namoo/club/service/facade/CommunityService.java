@@ -19,8 +19,9 @@ public interface CommunityService {
 	 * @param adminName
 	 * @param email
 	 * @param password
+	 * @return 
 	 */
-	public void registCommunity(String communityName, String description, String adminName, String email, String password);
+	public int registCommunity(String communityName, String description, String adminName, String email, String password);
 
 	/**
 	 * [주민으로 등록된 경우] 커뮤니티 개설
@@ -40,7 +41,7 @@ public interface CommunityService {
 	 * 
 	 * @param communityName
 	 */
-	public Community findCommunity(int communityName);
+	public Community findCommunity(int communityId);
 
 	/**
 	 * [주민으로 등록되지 않은 경우] 커뮤니티 가입

@@ -1,5 +1,4 @@
 package com.namoo.club.service.logic;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +28,7 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 	
 	@Override
-	public void registCommunity(String communityName, String description, String adminName, String email, String password) {
+	public int registCommunity(String communityName, String description, String adminName, String email, String password) {
 		//
 		if (isExistCommunityByName(communityName)) {
 			throw NamooExceptionFactory.createRuntime("이미 존재하는 커뮤니티입니다.");
@@ -43,7 +42,7 @@ public class CommunityServiceLogic implements CommunityService {
 		Date date = new Date();
 		Community community = new Community(communityName, description, date, admin);
 		
-		cmDao.createCommunity(community);
+		return cmDao.createCommunity(community);
 	}
 
 	private boolean isExistCommunityByName(String communityName) {
