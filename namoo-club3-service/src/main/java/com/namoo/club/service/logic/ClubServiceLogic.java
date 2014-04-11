@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.namoo.club.dao.ClubDao;
-import com.namoo.club.dao.CommunityCategoryDao;
-import com.namoo.club.dao.CommunityDao;
 import com.namoo.club.dao.MemberDao;
 import com.namoo.club.dao.SocialPersonDao;
 import com.namoo.club.dao.factory.DaoFactory;
@@ -21,15 +19,15 @@ public class ClubServiceLogic implements ClubService {
 	private ClubDao clubdao; 
 	private SocialPersonDao socialdao;
 	private MemberDao memberdao;
-	private CommunityDao communitydao;
-	private CommunityCategoryDao categorydao;
+//	private CommunityDao communitydao;
+//	private CommunityCategoryDao categorydao;
 			
 	public ClubServiceLogic() {
 		clubdao = DaoFactory.createFactory(DbType. MariaDB).getClubDao();
 		socialdao = DaoFactory.createFactory(DbType.MariaDB).getSocialPersonDao();
 		memberdao = DaoFactory.createFactory(DbType.MariaDB).getMemberDao();
-		communitydao = DaoFactory.createFactory(DbType.MariaDB).getCommunityDao();
-		categorydao = DaoFactory.createFactory(DbType.MariaDB).getCommunityCategoryDao();
+//		communitydao = DaoFactory.createFactory(DbType.MariaDB).getCommunityDao();
+//		categorydao = DaoFactory.createFactory(DbType.MariaDB).getCommunityCategoryDao();
 	}
 
 	private boolean isExistClubByName(int cmId, String clubName) {
@@ -195,7 +193,7 @@ public class ClubServiceLogic implements ClubService {
 		
 		List<Club> belongs = new ArrayList<>();
 		for (Club club : clubs) {
-			if (club.findMember(email) != null&&club.getCmid().equals(cmId)) {
+			if (club.findMember(email) != null && club.getCmid() == cmId) {
 				belongs.add(club);
 			}
 		}
@@ -218,7 +216,7 @@ public class ClubServiceLogic implements ClubService {
 		
 		List<Club> manages = new ArrayList<>();
 		for (Club club : clubs) {
-			if (club.getManager().getEmail().equals(email)&&club.getCmid().equals(cmId)) {
+			if (club.getManager().getEmail().equals(email) && club.getCmid() == cmId) {
 				manages.add(club);
 			}
 		}

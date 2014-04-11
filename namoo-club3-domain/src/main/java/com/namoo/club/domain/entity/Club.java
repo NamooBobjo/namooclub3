@@ -7,10 +7,8 @@ import java.util.List;
 
 public class Club  {
 
-	
-
-	private String cmid;
 	private Integer id;
+	private int cmid;
 
 	private String name;
 	private String description;
@@ -20,7 +18,6 @@ public class Club  {
 
 	private ClubManager manager;
 	private List<ClubMember> members;
-	private int cgid;
 	
 	//--------------------------------------------------------------------------
 		// constructors
@@ -29,82 +26,28 @@ public class Club  {
 		//
 	}
 	
-	/**
-	 * 
-	 * @param clubName
-	 * @param admin
-	 */
-	
-	public Club (String cmid, Integer id, Category category, String clubName, String description, SocialPerson admin) {
-		//
-		this.cmid=cmid;
-		this.id = id;
-		this.name = clubName;
-		this.description= description;
-		this.members = new ArrayList<ClubMember>();
-		this.openDate = new Date();
-		this.category = category;
-		
-		setManager(admin);
-		addMember(admin);
-		
-	}
-	
-	public Club (String cmid, Integer id, String clubName, String description, SocialPerson admin) {
-		//
-		this.cmid=cmid;
-		this.id = id;
-		this.name = clubName;
-		this.description= description;
-		this.members = new ArrayList<ClubMember>();
-		this.openDate = new Date();
-		
-		
-		setManager(admin);
-		addMember(admin);
-		
-	}
-	public Club(int cmid, int id, int cgId, String clubName,String description) {
-		// TODO Auto-generated constructor stub
-		this.cmid = Integer.toString(cmid);
-		this.id = id;
+	public Club(int cmid, String clubName, String description, Category category) {
+		// 
+		this.cmid = cmid;
 		this.name = clubName;
 		this.description = description;
-		this.cgid = cgId;
-		
-		this.members = new ArrayList<ClubMember>();
-		this.openDate = new Date();
-	}
-
-
-	
-	@Deprecated
-	public Club (String clubName, String description, SocialPerson admin) {
-		//
-		this.name = clubName;
-		this.description= description;
-		this.members = new ArrayList<ClubMember>();
-		
-		setManager(admin);
-		addMember(admin);
-	}
-	
-	public Club(int cmid, Category category, String clubName,String description, SocialPerson admin) {
-
-		this.cmid=Integer.toString(cmid);
-		
-		this.name = clubName;
-		this.description= description;
-		this.members = new ArrayList<ClubMember>();
-		this.openDate = new Date();
 		this.category = category;
 		
+		this.members = new ArrayList<ClubMember>();
+		this.openDate = new Date();
+	}
+	
+	public Club(int cmid, String clubName, String description, Category category, SocialPerson admin) {
+		// 
+		this(cmid, clubName, description, category);
+		
 		setManager(admin);
 		addMember(admin);
 	}
-
+	
 	//--------------------------------------------------------------------------
-		// getter/setter
+	// getter/setter
+	
 	public Category getCategory() {
 		return category;
 	}
@@ -114,10 +57,14 @@ public class Club  {
 		this.category = category;
 	}
 	
-	public String getCmid() {
+	public int getCmid() {
 		return cmid;
 	}
-	
+
+	public void setCmid(int cmid) {
+		this.cmid = cmid;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -154,13 +101,6 @@ public class Club  {
 
 	public void setOpenDate(Date openDate) {
 		this.openDate = openDate;
-	}
-	public int getCgid() {
-		return cgid;
-	}
-
-	public void setCgid(int cgid) {
-		this.cgid = cgid;
 	}
 
 	//--------------------------------------------------------------------------

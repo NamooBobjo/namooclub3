@@ -1,24 +1,17 @@
 package com.namoo.club.dao;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
-import org.dbunit.IDatabaseTester;
-import org.dbunit.JdbcDatabaseTester;
-import org.dbunit.dataset.DataSetException;
-import org.dbunit.dataset.IDataSet;
-import org.dbunit.dataset.xml.FlatXmlDataSet;
-import org.dbunit.operation.DatabaseOperation;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.namoo.club.dao.ClubDao;
 import com.namoo.club.dao.factory.DaoFactory.DbType;
 import com.namoo.club.dao.jdbc.MariaDBDaoFactory;
+import com.namoo.club.domain.entity.Category;
 import com.namoo.club.domain.entity.Club;
 
 public class ClubDaoTest extends DbCommonTest {
@@ -58,12 +51,17 @@ public class ClubDaoTest extends DbCommonTest {
 	public void testCreateClub() {
 
 		Club club = new Club();
-		club.setName("야구클럽");
-		club.setDescription("조기야구");
+		club.setName("한식클럽");
+		club.setDescription("한식 연구모임");
+		club.setCmid(1);
+		club.setCategory(new Category(1, "한국요리"));
+		Integer clid = dao.createClub(club);
+	
 		
-		Integer clubId = dao.createClub(club);
-		
-		//dao.readClub(clid)
+		club = dao.readClub(clid);
+	
+		assertEquals("한식클럽", club.getName());
+		assertEquals("한식 연구모임", club.getDescription());
 		
 	}
 
@@ -76,16 +74,13 @@ public class ClubDaoTest extends DbCommonTest {
 
 	@Test
 	public void testUpdateClub() {
-		Club club = new Club(1, 2, 11, "축구", "축구합시다");
-		dao.createClub(club);
-		
-		club = dao.readClub(17);
-		club.setName("농구");
-		
+		//
+		Club club = dao.readClub(1);
+		club.setName("양식");
 		dao.updateClub(club);
-		club = dao.readClub(17);
 		
-		assertEquals("농구", club.getName());
+		club = dao.readClub(1);
+		assertEquals("양식", club.getName());
 	}
 
 }

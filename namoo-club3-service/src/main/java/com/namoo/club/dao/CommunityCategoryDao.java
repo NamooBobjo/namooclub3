@@ -2,8 +2,6 @@ package com.namoo.club.dao;
 
 import java.util.List;
 
-import com.namoo.club.domain.entity.Category;
-
 public interface CommunityCategoryDao {
 
 	List<String> readAllCategory(int cmId);

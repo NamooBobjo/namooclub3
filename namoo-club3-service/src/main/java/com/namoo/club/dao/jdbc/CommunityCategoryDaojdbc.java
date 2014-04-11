@@ -12,8 +12,6 @@ import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 
 public class CommunityCategoryDaojdbc implements CommunityCategoryDao {
 
-	private static final boolean String = false;
-
 	@Override
 	public List<String> readAllCategory(int cmId) {
 
