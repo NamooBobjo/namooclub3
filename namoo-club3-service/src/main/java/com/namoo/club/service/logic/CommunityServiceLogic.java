@@ -56,7 +56,7 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 
 	@Override
-	public void registCommunity(String communityName, String description, String email, List<Category> category) {
+	public int registCommunity(String communityName, String description, String email, List<Category> category) {
 		//
 		if (isExistCommunityByName(communityName)) {
 			throw NamooExceptionFactory.createRuntime("이미 존재하는 커뮤니티입니다.");
@@ -72,6 +72,8 @@ public class CommunityServiceLogic implements CommunityService {
 		cmDao.createCommunity(community);
 		Community com = cmDao.readCommunity(communityName);
 		mbDao.joinAsCommunityMember(com.getId(), 1, towner);
+		
+		return cmDao.createCommunity(com);
 	}
 
 	private SocialPerson createPerson(String name, String email, String password) {
@@ -85,19 +87,16 @@ public class CommunityServiceLogic implements CommunityService {
 	@Override
 	public Community findCommunity(int cmId){
 		//
-		return cmDao.readCommunity(cmId);
+		Community community = cmDao.readCommunity(cmId);
+		
+		
+		return community;
 	}
 	
-
 	@Override
 	public void joinAsMember(String communityName, String name, String email, String password){
 		//
-		Community findCm = null;
-		for(Community community : cmDao.readAllCommunity()){
-			if(community.getName().equals(communityName)){
-				findCm = cmDao.readCommunity(community.getId());
-			}
-		}
+		Community findCm = cmDao.readCommunity(communityName);
 		
 		if (findCm == null) {
 			throw NamooExceptionFactory.createRuntime("커뮤니티가 존재하지 않습니다.");

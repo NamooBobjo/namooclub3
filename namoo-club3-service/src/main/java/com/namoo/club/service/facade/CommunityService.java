@@ -32,10 +32,11 @@ public interface CommunityService {
 	 * @param communityName
 	 * @param description
 	 * @param email
+	 * @return 
 	 * 
 	 * @throws NamooRuntimeException
 	 */
-	public void registCommunity(String communityName, String description, String email, List<Category> category);
+	public int registCommunity(String communityName, String description, String email, List<Category> category);
 
 	/**
 	 * 

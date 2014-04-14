@@ -10,6 +10,7 @@ import java.util.List;
 
 import com.namoo.club.dao.CommunityDao;
 import com.namoo.club.domain.entity.Community;
+import com.namoo.club.domain.entity.CommunityManager;
 import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 
 public class CommunityDaojdbc extends JdbcDaoTemplate implements CommunityDao {
@@ -174,6 +175,41 @@ public class CommunityDaojdbc extends JdbcDaoTemplate implements CommunityDao {
 		return community;
 	}
 
+
+	@Override
+	public CommunityManager readManager(String email, int communityId) {
+		//
+		Connection conn = null;
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		CommunityManager communityManager = null;
+		try {
+			conn = DbConnection.getConnection();
+			String sql = "SELECT a.email, a.id, a.mainManager FROM member a " + 
+					"INNER JOIN community b ON a.id = b.cmId" +
+					"INNER JOIN "+
+					" WHERE email = ?, kind = '1', id = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, email);
+			pstmt.setInt(2, communityId);
+			resultSet = pstmt.executeQuery();
+			
+			if(resultSet.next()){
+				String memberEmail = resultSet.getString("email");
+				String id = resultSet.getString("id");
+				String mainManager = resultSet.getString("mainManager");
+				
+				//communityManager = new CommunityManager(communityName, rolePerson);
+			}
+			
+		} catch (SQLException e) {
+			throw NamooExceptionFactory.createRuntime("readCommunity 오류");
+		}finally{
+			closeQuietly(resultSet, pstmt, conn);
+		}
+		return communityManager;
+	}
+	
 	@Override
 	public int createCommunity(Community community) {
 		//
@@ -250,5 +286,4 @@ public class CommunityDaojdbc extends JdbcDaoTemplate implements CommunityDao {
 			closeQuietly(pstmt, conn);
 		}
 	}
-
 }

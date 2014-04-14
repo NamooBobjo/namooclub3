@@ -74,24 +74,32 @@ public class CommunityServiceTest extends DbCommonTest {
 	}
 
 	@Test
-	public void testRegistCommunityInCategory() {
+	public void testRegistCommunity_InCategory() {
+		//
 		String communityName = "가나다커뮤니티";
 		String description = "세계의 요리를 배워요";
-		String email = "j@nate.com";
+		String email = "jjj@nate.com";
 		List<Category> categories = new ArrayList<>();
 		categories.add(new Category("A"));
 		categories.add(new Category("B"));
-		service.registCommunity(communityName, description, email, categories);
+		int communityId = service.registCommunity(communityName, description, email, categories);
+		
+		Community community = service.findCommunity(communityId);
+		assertEquals(communityName, community.getName());
+		assertEquals(description, community.getDescription());
 	}
 
 	@Test
-	public void testFindCommunity() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	public void testJoinAsMemberStringStringStringString() {
-		fail("Not yet implemented");
+	public void testJoinAsMember_firstJoin() {
+		//
+		String communityName = "요리커뮤니티";
+		String name = "ksj";
+		String email = "ksj@naver.com";
+		String password = "1234";
+		service.joinAsMember(communityName, name, email, password);
+		
+		Community community = service.findCommunity(1);
+		assertEquals(email, community.getManager().getEmail());
 	}
 
 	@Test

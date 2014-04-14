@@ -3,12 +3,14 @@ package com.namoo.club.dao;
 import java.util.List;
 
 import com.namoo.club.domain.entity.Community;
+import com.namoo.club.domain.entity.CommunityManager;
 
 public interface CommunityDao {
 
 	List<Community> readAllCommunity();
 	Community readCommunity(int communityId);
 	Community readCommunity(String cmName);
+	CommunityManager readManager(String email, int communityId);
 	
 	int createCommunity(Community community);
 	void deleteCommunity(int cmId);
