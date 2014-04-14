@@ -13,7 +13,7 @@ public interface ClubService {
 	/**
 	 * [주민으로 등록된 경우] 클럽 개설
 	 */
-	public void registClub(int cmId,String category,String clubName, String description, String email);
+	public void registClub(int cmId,String category, int clid, String description, String email);
 
 	/**
 	 * 
@@ -24,12 +24,15 @@ public interface ClubService {
 	/**
 	 * [주민으로 등록되지 않은 경우] 클럽 가입
 	 */
-	public void joinAsMember(String clubName, String name, String email, String password);
+	
+	public Club findClub(int clid);
+	
+	public void joinAsMember(int clid, String name, String email, String password);
 	
 	/**
 	 * [주민으로 등록된 경우] 클럽 가입
 	 */
-	public void joinAsMember(String clubName, String email);
+	public void joinAsMember(int clid, String email);
 
 	/**
 	 * @return
@@ -38,7 +41,7 @@ public interface ClubService {
 	/**
 	 * 이메일로 클럽 회원 찾기
 	 */
-	public ClubMember findClubMember(String clubName, String email);
+	public ClubMember findClubMember(int clid, String email);
 	
 	public List<Club> findClubsById(String id);
 	/**
@@ -48,17 +51,17 @@ public interface ClubService {
 	/**
 	 * 클럽 회원목록 조회
 	 */
-	public List<ClubMember> findAllClubMember(String clubName);
+	public List<ClubMember> findAllClubMember(int clid);
 	
 	/**
 	 * @param clubName
 	 */
-	public int countMembers(String clubName);
+	public int countMembers(int clid);
 	
 	/**
 	 * @param clubName
 	 */
-	public void removeClub(String clubName);
+	public void removeClub(int clid);
 	
 	/**
 	 * 자신이 회원으로 있는 클럽 목록조회
@@ -82,5 +85,5 @@ public interface ClubService {
 	 * @param clubName
 	 * @param email
 	 */
-	public void withdrawalClub(String clubName, String email);
+	public void withdrawalClub(int clid, String email);
 }

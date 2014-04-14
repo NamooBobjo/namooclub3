@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Club  {
 
-	private Integer id;
+	private int id;
 	private int cmid;
 
 	private String name;
@@ -48,6 +48,16 @@ public class Club  {
 	//--------------------------------------------------------------------------
 	// getter/setter
 	
+	public Club(int cmId, String clubName, String description,String category) {
+		// 
+		this.cmid = cmId;
+		this.name = clubName;
+		this.description = description;
+		this.category.setName(category);
+		this.members = new ArrayList<ClubMember>();
+		this.openDate = new Date();
+	}
+
 	public Category getCategory() {
 		return category;
 	}
