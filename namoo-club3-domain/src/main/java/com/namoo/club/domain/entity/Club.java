@@ -22,6 +22,10 @@ public class Club  {
 	//--------------------------------------------------------------------------
 		// constructors
 	
+	public void setMembers(List<ClubMember> members) {
+		this.members = members;
+	}
+
 	public Club() {
 		//
 	}

@@ -10,6 +10,8 @@ import java.util.List;
 import com.namoo.club.dao.ClubDao;
 import com.namoo.club.domain.entity.Category;
 import com.namoo.club.domain.entity.Club;
+import com.namoo.club.domain.entity.ClubMember;
+import com.namoo.club.domain.entity.SocialPerson;
 import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 
 public class ClubDaojdbc extends JdbcDaoTemplate implements ClubDao {
@@ -242,9 +244,39 @@ public class ClubDaojdbc extends JdbcDaoTemplate implements ClubDao {
 		String clName = resultSet.getString("clName");
 		String clDescription = resultSet.getString("clDescription");
 
-		Club club = new Club(cmId, clName, clDescription, category);
-		club.setId(clId);
 		
+		Club club = new Club(cmId, clName, clDescription, category);
+		
+		
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet result= null;
+		List<ClubMember> clubmember = new ArrayList<>();
+		try {
+			conn = DbConnection.getConnection();
+			String sql = "SELECT email, id, kind, manager, mainManager FROM member WHERE kind = 2 AND id =?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setInt(1, cmId);
+			result = pstmt.executeQuery();
+			
+			for(ClubMember member : clubmember){
+				while(result.next()){
+					String email = result.getString("email");
+					SocialPerson rolePerson = new SocialPerson(email);
+					member = new ClubMember(clName, rolePerson);				
+					clubmember.add(member);
+				}
+			}
+			club.setMembers(clubmember);
+			
+		} catch (SQLException e) {
+		e.printStackTrace();
+		throw NamooExceptionFactory.createRuntime("클럽목록조회 중 오류가 발생하였습니다.");
+	}finally{
+		closeQuietly(result, pstmt, conn);
+	}
+	
+		club.setId(clId);		
 		return club;
 	}
 }

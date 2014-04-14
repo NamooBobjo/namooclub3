@@ -25,6 +25,11 @@ public class SocialPerson{
 		this.password = password;
 	}
 
+	public SocialPerson(String email) {
+		// TODO Auto-generated constructor stub
+		this.email = email;
+	}
+
 	public String getName() {
 		return name;
 	}
