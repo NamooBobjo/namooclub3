@@ -44,14 +44,17 @@ public class DoCommunityCreateController extends HttpServlet {
 		String cmName = req.getParameter("cmName");
 		String description = req.getParameter("description");
 
-		List<Category> category = new ArrayList<>();
-		for (Category cate : category) {
-			if (!cate.equals("")) {
-				category.add(cate);
+		String[] values = req.getParameterValues("category");
+		List<Category> categories = new ArrayList<>();
+
+		for (String value : values) {
+			if (!value.equals("")) {
+				Category category = new Category(value);
+				categories.add(category);
 			}
 		}
 
-		cmservice.registCommunity(cmName, description, email, category);
+		cmservice.registCommunity(cmName, description, email, categories);
 
 		resp.sendRedirect("cmList.xhtml");
 	}

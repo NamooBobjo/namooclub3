@@ -44,7 +44,7 @@
                             <div class="col-lg-10">
                                 <select class="form-control" id="select" name = "category">
                                 <c:forEach var="cate" items="${category}" varStatus="list">
-                                    <option>${cate}</option>
+                                    <option>${cate.getName()}</option>
                                     </c:forEach>
                                 </select>
                             </div>

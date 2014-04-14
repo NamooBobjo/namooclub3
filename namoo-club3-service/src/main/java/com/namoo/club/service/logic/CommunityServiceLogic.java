@@ -2,6 +2,7 @@ package com.namoo.club.service.logic;
 import java.util.Date;
 import java.util.List;
 
+import com.namoo.club.dao.CommunityCategoryDao;
 import com.namoo.club.dao.CommunityDao;
 import com.namoo.club.dao.MemberDao;
 import com.namoo.club.dao.SocialPersonDao;
@@ -19,12 +20,14 @@ public class CommunityServiceLogic implements CommunityService {
 	private CommunityDao cmDao;
 	private SocialPersonDao spDao;
 	private MemberDao mbDao;
+	private CommunityCategoryDao cateDao;
 	
 	public CommunityServiceLogic() {
 		//
 		cmDao = DaoFactory.createFactory(DbType.MariaDB).getCommunityDao();
 		spDao = DaoFactory.createFactory(DbType.MariaDB).getSocialPersonDao();
 		mbDao = DaoFactory.createFactory(DbType.MariaDB).getMemberDao();
+		cateDao = DaoFactory.createFactory(DbType.MariaDB).getCommunityCategoryDao();
 	}
 	
 	@Override
@@ -69,11 +72,15 @@ public class CommunityServiceLogic implements CommunityService {
 		
 		Community community = new Community(communityName, description, towner, category);
 		
-		cmDao.createCommunity(community);
-		Community com = cmDao.readCommunity(communityName);
-		mbDao.joinAsCommunityMember(com.getId(), 1, towner);
+		int cmId = cmDao.createCommunity(community);
+		for(Category cate : category){
+			cateDao.createCategory(cmId, cate);
+			System.out.println(cate);
+		}
+
+		mbDao.joinAsCommunityMember(cmId, 1, towner);
 		
-		return cmDao.createCommunity(com);
+		return cmId;
 	}
 
 	private SocialPerson createPerson(String name, String email, String password) {
@@ -88,7 +95,8 @@ public class CommunityServiceLogic implements CommunityService {
 	public Community findCommunity(int cmId){
 		//
 		Community community = cmDao.readCommunity(cmId);
-		
+		List<Category> category = cateDao.readAllCategory(cmId);
+		community.setCategory(category);
 		
 		return community;
 	}
