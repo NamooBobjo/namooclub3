@@ -27,13 +27,13 @@ public class Community  {
 	
 	/**
 	 * 
-	 * @param communityName
+	 * @param communityId
 	 * @param admin
 	 */
 	
-	public Community(String communityName, String description, Date date, SocialPerson admin){
+	public Community(int communityId, String description, Date date, SocialPerson admin){
 		//
-		this.name = communityName;
+		this.cmId = communityId;
 		this.description = description;
 		this.members = new ArrayList<CommunityMember>();
 		this.openDate = date;
@@ -66,9 +66,9 @@ public class Community  {
 		addMember(admin);
 	}
 	
-	public Community(String communityName, String description, SocialPerson admin, List<Category> category){
+	public Community(int communityId, String description, SocialPerson admin, List<Category> category){
 		//
-		this.name = communityName;
+		this.cmId = communityId;
 		this.description = description;
 		this.members = new ArrayList<CommunityMember>();
 		this.openDate = new Date();

@@ -31,9 +31,8 @@ public class DoCommunityWithdrawController extends HttpServlet{
 		HttpSession session = req.getSession();
 		CommunityService cmservice = NamooClubServiceFactory.getInstance().getCommunityService();
 		
-		String cmId = req.getParameter("cmId");
+		int cmId = Integer.parseInt(req.getParameter("cmId"));
 		String email = (String)session.getAttribute("loginID");	
-		String cmName = req.getParameter("cmName");
 		
 		cmservice.withdrawalCommunity(cmId, email);
 		

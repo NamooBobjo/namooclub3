@@ -30,11 +30,11 @@ public class DoCommunityJoinController extends HttpServlet{
 	
 		HttpSession session = req.getSession();
 		CommunityService cmservice = NamooClubServiceFactory.getInstance().getCommunityService();
-		String cmId = req.getParameter("cmId");		
+		int communityId = Integer.parseInt(req.getParameter("cmId"));		
 		String email = (String)session.getAttribute("loginID");
 		
 		
-		cmservice.joinAsMember(cmId, email);
+		cmservice.joinAsMember(communityId, email);
 		
 		resp.sendRedirect("cmList.xhtml");
 }

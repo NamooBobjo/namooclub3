@@ -31,9 +31,9 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 	
 	@Override
-	public int registCommunity(String communityName, String description, String adminName, String email, String password) {
+	public int registCommunity(int communityId, String description, String adminName, String email, String password) {
 		//
-		if (isExistCommunityByName(communityName)) {
+		if (isExistCommunityByName(communityId)) {
 			throw NamooExceptionFactory.createRuntime("이미 존재하는 커뮤니티입니다.");
 		}
 		
@@ -43,15 +43,15 @@ public class CommunityServiceLogic implements CommunityService {
 
 		SocialPerson admin = createPerson(adminName, email, password);
 		Date date = new Date();
-		Community community = new Community(communityName, description, date, admin);
+		Community community = new Community(communityId, description, date, admin);
 		
 		return cmDao.createCommunity(community);
 	}
 
-	private boolean isExistCommunityByName(String communityName) {
+	private boolean isExistCommunityByName(int communityId) {
 		//
 		for(Community community : cmDao.readAllCommunity()){
-			if(community.getName().equals(communityName)){
+			if(community.getName().equals(communityId)){
 				return true;
 			}
 		}
@@ -59,9 +59,9 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 
 	@Override
-	public int registCommunity(String communityName, String description, String email, List<Category> category) {
+	public int registCommunity(int communityId, String description, String email, List<Category> category) {
 		//
-		if (isExistCommunityByName(communityName)) {
+		if (isExistCommunityByName(communityId)) {
 			throw NamooExceptionFactory.createRuntime("이미 존재하는 커뮤니티입니다.");
 		}
 		
@@ -70,7 +70,7 @@ public class CommunityServiceLogic implements CommunityService {
 			throw NamooExceptionFactory.createRuntime("존재하지 않는 주민입니다.");
 		}
 		
-		Community community = new Community(communityName, description, towner, category);
+		Community community = new Community(communityId, description, towner, category);
 		
 		int cmId = cmDao.createCommunity(community);
 		for(Category cate : category){
@@ -102,9 +102,9 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 	
 	@Override
-	public void joinAsMember(String communityName, String name, String email, String password){
+	public void joinAsMember(int communityId, String name, String email, String password){
 		//
-		Community findCm = cmDao.readCommunity(communityName);
+		Community findCm = cmDao.readCommunity(communityId);
 		
 		if (findCm == null) {
 			throw NamooExceptionFactory.createRuntime("커뮤니티가 존재하지 않습니다.");
@@ -121,11 +121,11 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 
 	@Override
-	public void joinAsMember(String communityName, String email) {
+	public void joinAsMember(int communityId, String email) {
 		// 
 		Community findCm = null;
 		for(Community community : cmDao.readAllCommunity()){
-			if(community.getName().equals(communityName)){
+			if(community.getName().equals(communityId)){
 				findCm = cmDao.readCommunity(community.getId());
 			}
 		}
@@ -145,11 +145,11 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 
 	@Override
-	public CommunityMember findCommunityMember(String communityName, String email) {
+	public CommunityMember findCommunityMember(int communityId, String email) {
 		// 
 		Community findCm = null;
 		for(Community community : cmDao.readAllCommunity()){
-			if(community.getName().equals(communityName)){
+			if(community.getName().equals(communityId)){
 				findCm = cmDao.readCommunity(community.getId());
 			}
 		}
@@ -168,11 +168,11 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 
 	@Override
-	public List<CommunityMember> findAllCommunityMember(String communityName) {
+	public List<CommunityMember> findAllCommunityMember(int communityId) {
 		// 
 		Community findCm = null;
 		for(Community community : cmDao.readAllCommunity()){
-			if(community.getName().equals(communityName)){
+			if(community.getName().equals(communityId)){
 				findCm = cmDao.readCommunity(community.getId());
 			}
 		}
@@ -184,11 +184,11 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 
 	@Override
-	public int countMembers(String communityName){
+	public int countMembers(int communityId){
 		//
 		Community findCm = null;
 		for(Community community : cmDao.readAllCommunity()){
-			if(community.getName().equals(communityName)){
+			if(community.getName().equals(communityId)){
 				findCm = cmDao.readCommunity(community.getId());
 			}
 		}
@@ -201,9 +201,9 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 
 	@Override
-	public void removeCommunity(int communityName) {
+	public void removeCommunity(int communityId) {
 		// 
-		cmDao.deleteCommunity(communityName);
+		cmDao.deleteCommunity(communityId);
 	}
 
 	@Override
@@ -225,11 +225,11 @@ public class CommunityServiceLogic implements CommunityService {
 	}
 
 	@Override
-	public void withdrawalCommunity(String communityName, String email) {
+	public void withdrawalCommunity(int communityId, String email) {
 		//
 		Community findCm = null;
 		for(Community community : cmDao.readAllCommunity()){
-			if(community.getName().equals(communityName)){
+			if(community.getName().equals(communityId)){
 				findCm = cmDao.readCommunity(community.getId());
 			}
 		}

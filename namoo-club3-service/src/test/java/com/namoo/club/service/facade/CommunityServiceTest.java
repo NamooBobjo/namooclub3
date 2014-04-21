@@ -35,68 +35,68 @@ public class CommunityServiceTest extends DbCommonTest {
 	@Test(expected=NamooRuntimeException.class)
 	public void testRegistCommunityNameWithException() {
 		//
-		String name = "요리커뮤니티";
+		int id = 1;
 		String email = "j@nate.com";
 		String adminName = "효진";
 		String description = "세계의 요리를 배워요";
 		String password = "1234";
 		
-		service.registCommunity(name, description, adminName, email, password);
+		service.registCommunity(id, description, adminName, email, password);
 	}
 	
 	// 해당 유저가 존재할경우
 	@Test(expected=NamooRuntimeException.class)
 	public void testRegistCommunityUserWithException() {
-		String name = "가나다커뮤니티";
+		int id = 3;
 		String email = "jjj@nate.com";
 		String adminName = "정효진";
 		String description = "세계의 요리를 배워요";
 		String password = "1234";
 		
-		service.registCommunity(name, description, adminName, email, password);
+		service.registCommunity(id, description, adminName, email, password);
 	}
 	
 	@Test
 	public void testRegistCommunity() {
 		//
-		String name = "가나다커뮤니티";
+		int id = 3;
 		String email = "j@nate.com";
 		String adminName = "효진";
 		String description = "세계의 요리를 배워요";
 		String password = "1234";
 		
-		int communityId = service.registCommunity(name, description, adminName, email, password);
+		int communityId = service.registCommunity(id, description, adminName, email, password);
 
 		// 검증
 		Community community = service.findCommunity(communityId);
-		assertEquals(name, community.getName());
+		assertEquals(id, community.getId());
 		assertEquals(description, community.getDescription());
 	}
 
 	@Test
 	public void testRegistCommunity_InCategory() {
 		//
-		String communityName = "가나다커뮤니티";
+		int communityId = 3;
 		String description = "세계의 요리를 배워요";
 		String email = "jjj@nate.com";
 		List<Category> categories = new ArrayList<>();
 		categories.add(new Category("A"));
 		categories.add(new Category("B"));
-		int communityId = service.registCommunity(communityName, description, email, categories);
+		service.registCommunity(communityId, description, email, categories);
 		
 		Community community = service.findCommunity(communityId);
-		assertEquals(communityName, community.getName());
+		assertEquals(communityId, community.getId());
 		assertEquals(description, community.getDescription());
 	}
 
 	@Test
 	public void testJoinAsMember_firstJoin() {
 		//
-		String communityName = "요리커뮤니티";
+		int communityid = 1;
 		String name = "ksj";
 		String email = "ksj@naver.com";
 		String password = "1234";
-		service.joinAsMember(communityName, name, email, password);
+		service.joinAsMember(communityid, name, email, password);
 		
 		Community community = service.findCommunity(1);
 		assertEquals(email, community.getManager().getEmail());
