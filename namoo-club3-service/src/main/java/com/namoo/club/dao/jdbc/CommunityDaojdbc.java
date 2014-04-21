@@ -11,6 +11,7 @@ import java.util.List;
 import com.namoo.club.dao.CommunityDao;
 import com.namoo.club.domain.entity.Community;
 import com.namoo.club.domain.entity.CommunityManager;
+import com.namoo.club.domain.entity.SocialPerson;
 import com.namoo.club.service.logic.exception.NamooExceptionFactory;
 
 public class CommunityDaojdbc extends JdbcDaoTemplate implements CommunityDao {
@@ -123,18 +124,17 @@ public class CommunityDaojdbc extends JdbcDaoTemplate implements CommunityDao {
 		Community community = null;
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "SELECT cmid, cmName, cmDescription, cmDate FROM community WHERE cmid = ?";
+			String sql = "SELECT cmName, cmDescription, cmDate FROM community WHERE cmid = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, communityId);
 			resultSet = pstmt.executeQuery();
 			
 			if(resultSet.next()){
-				int cmId = resultSet.getInt("cmid");
 				String cmName = resultSet.getString("cmName");
 				String cmDescription = resultSet.getString("cmDescription");
 				Date cmDate = resultSet.getDate("cmDate");
 				
-				community = new Community(cmId, cmName, cmDescription, cmDate);
+				community = new Community(communityId, cmName, cmDescription, cmDate);
 			}
 			
 		} catch (SQLException e) {
@@ -146,37 +146,6 @@ public class CommunityDaojdbc extends JdbcDaoTemplate implements CommunityDao {
 	}
 	
 	@Override
-	public Community readCommunity(String cmName) {
-		Connection conn = null;
-		ResultSet resultSet = null;
-		PreparedStatement pstmt = null;
-		Community community = null;
-		try {
-			conn = DbConnection.getConnection();
-			String sql = "SELECT cmId, cmName, cmDescription, cmDate FROM community WHERE cmName = ?";
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, cmName);
-			resultSet = pstmt.executeQuery();
-			
-			if (resultSet.next()){
-				int cmId = resultSet.getInt("cmId");
-				String cmDescription = resultSet.getString("cmDescription");
-				Date cmDate = resultSet.getDate("cmDate");
-				
-				community = new Community(cmId, cmName, cmDescription, cmDate);
-			}
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-			throw NamooExceptionFactory.createRuntime("readCommunity 오류");
-		}finally{
-			closeQuietly(resultSet, pstmt, conn);
-		}
-		return community;
-	}
-
-
-	@Override
 	public CommunityManager readManager(String email, int communityId) {
 		//
 		Connection conn = null;
@@ -185,9 +154,9 @@ public class CommunityDaojdbc extends JdbcDaoTemplate implements CommunityDao {
 		CommunityManager communityManager = null;
 		try {
 			conn = DbConnection.getConnection();
-			String sql = "SELECT a.email, a.id, a.mainManager FROM member a " + 
+			String sql = "SELECT a.email, c.name, c.password FROM member a " + 
 					"INNER JOIN community b ON a.id = b.cmId" +
-					"INNER JOIN "+
+					"INNER JOIN socialperson c ON a.email = c.email"+
 					" WHERE email = ?, kind = '1', id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, email);
@@ -196,10 +165,11 @@ public class CommunityDaojdbc extends JdbcDaoTemplate implements CommunityDao {
 			
 			if(resultSet.next()){
 				String memberEmail = resultSet.getString("email");
-				String id = resultSet.getString("id");
-				String mainManager = resultSet.getString("mainManager");
+				String name = resultSet.getString("name");
+				String password = resultSet.getString("password");
 				
-				//communityManager = new CommunityManager(communityName, rolePerson);
+				SocialPerson rolePerson = new SocialPerson(name, memberEmail, password);
+				communityManager = new CommunityManager(communityId, rolePerson);
 			}
 			
 		} catch (SQLException e) {

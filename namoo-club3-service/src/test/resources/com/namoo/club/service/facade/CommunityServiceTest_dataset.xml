@@ -7,5 +7,5 @@
 	<community cmId="2" cmName="축구커뮤니티" cmDescription="조기축구회" cmDate="2014-04-10 12:45:20"/>
 	
 	<Member email= "jjj@nate.com" id="1" kind="1" manager="1" mainManager="1"/>
-	<Member email= "sss@nate.com" id="2" kind="1" manager="0" mainManager="1"/>
+	<Member email= "sss@nate.com" id="2" kind="1" manager="1" mainManager="1"/>
 </dataset>

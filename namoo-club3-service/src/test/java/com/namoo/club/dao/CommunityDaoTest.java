@@ -36,14 +36,7 @@ public class CommunityDaoTest extends DbCommonTest{
 		
 		assertEquals(2 ,communities.size());
 	}
-	
-	@Test
-	public void testReadCommunityById(){
-		Community community = dao.readCommunity("요리커뮤니티");
-		
-		assertEquals(1, community.getId());
-	}
-	
+
 	@Test
 	public void testReadCommunityByName(){
 		Community community = dao.readCommunity(1);

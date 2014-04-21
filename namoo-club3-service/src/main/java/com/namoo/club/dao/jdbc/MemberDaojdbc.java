@@ -10,6 +10,7 @@ import java.util.List;
 import com.namoo.club.dao.MemberDao;
 import com.namoo.club.domain.entity.ClubManager;
 import com.namoo.club.domain.entity.ClubMember;
+import com.namoo.club.domain.entity.CommunityManager;
 import com.namoo.club.domain.entity.CommunityMember;
 import com.namoo.club.domain.entity.SocialPerson;
 import com.namoo.club.service.logic.exception.NamooExceptionFactory;
@@ -53,6 +54,80 @@ public class MemberDaojdbc extends JdbcDaoTemplate implements MemberDao {
 			closeQuietly(resultSet, pstmt, conn);
 		}
 		return communityMembers;
+	}
+	
+	@Override
+	public CommunityManager readCommunityManager(int communityId) {
+		//
+		Connection conn = null;
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		CommunityManager communityManager = null;
+		
+		try {
+			conn = DbConnection.getConnection();
+			String sql = "SELECT a.email, a.id, a.kind, b.username FROM member a " +
+					"INNER JOIN socialPerson b ON a.email = b.email " + 
+					"INNER JOIN community c ON a.id = c.cmId " + 
+					"WHERE kind = 1 and id = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, communityId);
+			resultSet = pstmt.executeQuery();
+			
+			while(resultSet.next()){
+				SocialPerson rolePerson = new SocialPerson();
+				rolePerson.setEmail(resultSet.getString("email"));
+				rolePerson.setName(resultSet.getString("username"));
+				
+				communityManager = new CommunityManager(communityId, rolePerson);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("커뮤니티 멤버 조회 중 오류가 발생하였습니다.");
+		}finally{
+			closeQuietly(resultSet, pstmt, conn);
+		}
+		return communityManager;
+	}
+	
+	@Override
+	public CommunityMember readCommunityMember(int communityId, String email) {
+		//
+		Connection conn = null;
+		ResultSet resultSet = null;
+		PreparedStatement pstmt = null;
+		CommunityMember communityMember = null;
+		
+		try {
+			conn = DbConnection.getConnection();
+			String sql = "SELECT a.email, a.id, c.cmName, a.kind, b.username FROM member a " +
+					"INNER JOIN socialPerson b ON a.email = b.email " + 
+					"INNER JOIN community c ON a.id = c.cmId " + 
+					"WHERE kind = 1 and id = ? AND a.email = ?";
+			pstmt = conn.prepareStatement(sql);
+			
+			pstmt.setInt(1, communityId);
+			pstmt.setString(2, email);
+			resultSet = pstmt.executeQuery();
+			
+			if (resultSet.next()){
+				SocialPerson rolePerson = new SocialPerson();
+				rolePerson.setEmail(resultSet.getString("email"));
+				rolePerson.setName(resultSet.getString("username"));
+				
+				String communityName = resultSet.getString("cmName");
+				communityMember = new CommunityMember(communityName, rolePerson);
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw NamooExceptionFactory.createRuntime("커뮤니티 멤버 조회 중 오류가 발생하였습니다.");
+		}finally{
+			closeQuietly(resultSet, pstmt, conn);
+		}
+		return communityMember;
 	}
 	@Override
 	public List<ClubManager> readClubManagers(int clubId) {

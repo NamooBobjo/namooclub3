@@ -1,7 +1,6 @@
 package com.namoo.club.service.facade;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,8 +11,8 @@ import org.junit.Test;
 
 import com.namoo.club.domain.entity.Category;
 import com.namoo.club.domain.entity.Community;
+import com.namoo.club.domain.entity.CommunityMember;
 import com.namoo.club.service.logic.CommunityServiceLogic;
-import com.namoo.club.service.logic.exception.NamooRuntimeException;
 import com.namoo.club.shared.DbCommonTest;
 
 public class CommunityServiceTest extends DbCommonTest {
@@ -31,58 +30,16 @@ public class CommunityServiceTest extends DbCommonTest {
 		super.tearDown();
 	}
 
-	// 커뮤니티가 존재할경우
-	@Test(expected=NamooRuntimeException.class)
-	public void testRegistCommunityNameWithException() {
-		//
-		int id = 1;
-		String email = "j@nate.com";
-		String adminName = "효진";
-		String description = "세계의 요리를 배워요";
-		String password = "1234";
-		
-		service.registCommunity(id, description, adminName, email, password);
-	}
-	
-	// 해당 유저가 존재할경우
-	@Test(expected=NamooRuntimeException.class)
-	public void testRegistCommunityUserWithException() {
-		int id = 3;
-		String email = "jjj@nate.com";
-		String adminName = "정효진";
-		String description = "세계의 요리를 배워요";
-		String password = "1234";
-		
-		service.registCommunity(id, description, adminName, email, password);
-	}
-	
-	@Test
-	public void testRegistCommunity() {
-		//
-		int id = 3;
-		String email = "j@nate.com";
-		String adminName = "효진";
-		String description = "세계의 요리를 배워요";
-		String password = "1234";
-		
-		int communityId = service.registCommunity(id, description, adminName, email, password);
-
-		// 검증
-		Community community = service.findCommunity(communityId);
-		assertEquals(id, community.getId());
-		assertEquals(description, community.getDescription());
-	}
-
 	@Test
 	public void testRegistCommunity_InCategory() {
 		//
-		int communityId = 3;
+		String communityName = "세계요리 커뮤니티";
 		String description = "세계의 요리를 배워요";
 		String email = "jjj@nate.com";
 		List<Category> categories = new ArrayList<>();
 		categories.add(new Category("A"));
 		categories.add(new Category("B"));
-		service.registCommunity(communityId, description, email, categories);
+		int communityId = service.registCommunity(communityName, description, email, categories);
 		
 		Community community = service.findCommunity(communityId);
 		assertEquals(communityId, community.getId());
@@ -103,52 +60,92 @@ public class CommunityServiceTest extends DbCommonTest {
 	}
 
 	@Test
-	public void testJoinAsMemberStringString() {
-		fail("Not yet implemented");
+	public void testJoinAsMember() {
+		//
+		int communityId = 1;
+		String email = "ksy5350@nate.com";
+		
+		assertEquals(1, service.findAllCommunityMember(1).size());
+		service.joinAsMember(communityId, email);
+		
+		assertEquals(2, service.findAllCommunityMember(1).size());
 	}
 
 	@Test
 	public void testFindAllCommunities() {
-		fail("Not yet implemented");
+		int count = service.findAllCommunities().size();
+		
+		assertEquals(2, count);
 	}
 
 	@Test
 	public void testFindCommunityMember() {
-		fail("Not yet implemented");
+		//
+		int communityId = 1;
+		String email = "jjj@nate.com"; 
+		CommunityMember member = service.findCommunityMember(communityId, email);
+		
+		assertEquals("정효진", member.getName());
 	}
 
 	@Test
-	public void testFindAllCommunityMember() {
-		fail("Not yet implemented");
+	public void testFindAllCommunityMembers() {
+		int communityId = 1;
+		int count = service.findAllCommunityMember(communityId).size();
+		
+		assertEquals(1, count);
 	}
 
 	@Test
 	public void testCountMembers() {
-		fail("Not yet implemented");
+		//
+		int communityId = 1;
+		int count = service.countMembers(communityId);
+		
+		assertEquals(1, count);
 	}
 
 	@Test
 	public void testRemoveCommunity() {
-		fail("Not yet implemented");
+		//
+		int communityId = 1;
+		service.removeCommunity(communityId);
+		int count = service.findAllCommunities().size();
+		assertEquals(1, count);
 	}
 
 	@Test
 	public void testFindJoinedCommunities() {
-		fail("Not yet implemented");
+		//
+		String email = "jjj@nate.com";
+		int count = service.findJoinedCommunities(email).size();
+		
+		assertEquals(1, count);
 	}
 
 	@Test
 	public void testFindAllUnjoinedCommunities() {
-		fail("Not yet implemented");
+		String email = "jjj@nate.com";
+		int count = service.findAllUnjoinedCommunities(email).size();
+		
+		assertEquals(1, count);
 	}
 
 	@Test
 	public void testFindManagedCommnities() {
-		fail("Not yet implemented");
+		String email = "jjj@nate.com";
+		int count = service.findManagedCommnities(email).size();
+		
+		assertEquals(1, count);
 	}
 
 	@Test
 	public void testWithdrawalCommunity() {
-		fail("Not yet implemented");
+		int communityId = 1;
+		String email = "jjj@nate.com";
+		service.withdrawalCommunity(communityId, email);
+		
+		int count = service.findAllCommunityMember(communityId).size();
+		assertEquals(0, count);
 	}
 }

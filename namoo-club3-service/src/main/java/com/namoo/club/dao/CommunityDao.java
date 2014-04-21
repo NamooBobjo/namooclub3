@@ -9,7 +9,6 @@ public interface CommunityDao {
 
 	List<Community> readAllCommunity();
 	Community readCommunity(int communityId);
-	Community readCommunity(String cmName);
 	CommunityManager readManager(String email, int communityId);
 	
 	int createCommunity(Community community);

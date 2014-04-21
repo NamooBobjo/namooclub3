@@ -25,15 +25,15 @@ public class Community  {
 		//
 	}
 	
-	/**
-	 * 
-	 * @param communityId
-	 * @param admin
-	 */
-	
-	public Community(int communityId, String description, Date date, SocialPerson admin){
+//	/**
+//	 * 
+//	 * @param communityId
+//	 * @param admin
+//	 */
+//	
+	public Community(String communityName, String description, SocialPerson admin, Date date){
 		//
-		this.cmId = communityId;
+		this.name = communityName;
 		this.description = description;
 		this.members = new ArrayList<CommunityMember>();
 		this.openDate = date;
@@ -42,7 +42,7 @@ public class Community  {
 		setManager(admin);
 		addMember(admin);
 	}
-	
+//	
 	public Community(int id, String communityName, String description, Date date){
 		//
 		this.cmId = id;
@@ -52,20 +52,20 @@ public class Community  {
 		this.openDate = date;
 		this.clubs = new ArrayList<Club>();
 	}
-	
-	public Community(int id, String communityName, String description, SocialPerson admin){
-		//
-		this.cmId = id;
-		this.name = communityName;
-		this.description = description;
-		this.members = new ArrayList<CommunityMember>();
-		this.openDate = new Date();
-		this.clubs = new ArrayList<Club>();
-		
-		setManager(admin);
-		addMember(admin);
-	}
-	
+//	
+//	public Community(int id, String communityName, String description, SocialPerson admin){
+//		//
+//		this.cmId = id;
+//		this.name = communityName;
+//		this.description = description;
+//		this.members = new ArrayList<CommunityMember>();
+//		this.openDate = new Date();
+//		this.clubs = new ArrayList<Club>();
+//		
+//		setManager(admin);
+//		addMember(admin);
+//	}
+//	
 	public Community(int communityId, String description, SocialPerson admin, List<Category> category){
 		//
 		this.cmId = communityId;
@@ -97,7 +97,6 @@ public class Community  {
 		return cmId;
 	}	
 
-	@Deprecated
 	public Community(String communityName, String description, SocialPerson admin){
 		//
 		this.name = communityName;
@@ -159,9 +158,19 @@ public class Community  {
 	public void setClubs(List<Club> clubs) {
 		this.clubs = clubs;
 	}
+	
+	public void setMembers(List<CommunityMember> members) {
+		this.members = members;
+	}
+	
+	public void setManager(CommunityManager manager) {
+		this.manager = manager;
+	}
+	
 	//--------------------------------------------------------------------------
 	// public methods
 	
+
 	public CommunityMember findMember(String email) {
 		//
 		for (CommunityMember member : members) {
@@ -178,7 +187,7 @@ public class Community  {
 	 */
 	public void setManager(SocialPerson rolePerson){
 		//
-		CommunityManager manager = new CommunityManager(name, rolePerson);
+		CommunityManager manager = new CommunityManager(cmId, rolePerson);
 		this.manager = manager;
 	}
 

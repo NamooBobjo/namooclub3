@@ -4,7 +4,7 @@ package com.namoo.club.domain.entity;
 public class CommunityManager  {
 
 	
-	private String communityName;
+	private int communityId;
 	private SocialPerson rolePerson;
 
 	//--------------------------------------------------------------------------
@@ -14,9 +14,9 @@ public class CommunityManager  {
 	 * 
 	 * @param rolePerson
 	 */
-	public CommunityManager(String communityName, SocialPerson rolePerson){
+	public CommunityManager(int communityId, SocialPerson rolePerson){
 		//
-		this.communityName = communityName;
+		this.communityId = communityId;
 		this.rolePerson = rolePerson;
 	}
 	
@@ -33,13 +33,12 @@ public class CommunityManager  {
 		return rolePerson.getEmail();
 	}
 
-	public String getCommunityName() {
-		return communityName;
+	public int getCommunityId() {
+		return communityId;
 	}
 
-	public void setCommunityName(String communityName) {
-		this.communityName = communityName;
+	public void setCommunityId(int communityId) {
+		this.communityId = communityId;
 	}
-	
 
 }

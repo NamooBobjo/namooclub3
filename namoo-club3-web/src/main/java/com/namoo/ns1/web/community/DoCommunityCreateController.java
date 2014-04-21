@@ -41,7 +41,7 @@ public class DoCommunityCreateController extends HttpServlet {
 		String loginID = (String) session.getAttribute("loginID");
 		String email = twservice.findTowner(loginID).getEmail();
 
-		int communityId = Integer.parseInt(req.getParameter("cmName"));
+		String communityName = req.getParameter("cmName");
 		String description = req.getParameter("description");
 
 		String[] values = req.getParameterValues("category");
@@ -54,7 +54,7 @@ public class DoCommunityCreateController extends HttpServlet {
 			}
 		}
 
-		cmservice.registCommunity(communityId, description, email, categories);
+		cmservice.registCommunity(communityName, description, email, categories);
 
 		resp.sendRedirect("cmList.xhtml");
 	}
