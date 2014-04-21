@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.namoo.club.domain.entity.Category;
 import com.namoo.club.domain.entity.Club;
 import com.namoo.club.domain.entity.Community;
 import com.namoo.club.service.facade.ClubService;
@@ -36,11 +37,13 @@ public class DoClCreateController extends HttpServlet{
 		CommunityService cmservice = NamooClubServiceFactory.getInstance().getCommunityService();
 		HttpSession session = req.getSession();
 		
-		int clubId = Integer.parseInt(req.getParameter("clName"));
+		String clubName = req.getParameter("clName");
 		String description = req.getParameter("content");
 		String email = (String)session.getAttribute("loginID");
 		int cmId = Integer.parseInt(req.getParameter("cmId"));
-		String category = req.getParameter("category");
+		String categoryName = req.getParameter("category");
+		Category category = new Category();
+		category.setName(categoryName);
 		
 		Community community =	cmservice.findCommunity(cmId);
 		List<Club> clubs = community.getClubs();
@@ -51,6 +54,8 @@ public class DoClCreateController extends HttpServlet{
 			System.out.println("22");
 			System.out.println("클럽이름 " +club.getName());
 			System.out.println("카테고리 : " +club.getCategory());
+			
+			// 해당카테고리의 클럽이 존재할 경우 
 			if(category.equals(club.getCategory())){
 				resp.sendRedirect("create.xhtml?cmId="+cmId);
 				return;
@@ -58,7 +63,7 @@ public class DoClCreateController extends HttpServlet{
 		}
 		System.out.println("1");
 		
-		clservice.registClub(cmId, category, clubId, description, email);
+		clservice.registClub(cmId, category, clubName, description, email);
 		resp.sendRedirect("clList.xhtml?cmId="+cmId);
 	}
 }

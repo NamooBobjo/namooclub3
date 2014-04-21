@@ -2,6 +2,7 @@ package com.namoo.club.service.facade;
 
 import java.util.List;
 
+import com.namoo.club.domain.entity.Category;
 import com.namoo.club.domain.entity.Club;
 import com.namoo.club.domain.entity.ClubMember;
 
@@ -13,7 +14,7 @@ public interface ClubService {
 	/**
 	 * [주민으로 등록된 경우] 클럽 개설
 	 */
-	public void registClub(int cmId,String category, int clid, String description, String email);
+	public void registClub(int cmId, Category category, String clubName, String description, String email);
 
 	/**
 	 * 
@@ -43,7 +44,7 @@ public interface ClubService {
 	 */
 	public ClubMember findClubMember(int clid, String email);
 	
-	public List<Club> findClubsById(String id);
+	public List<Club> findClubsById(int id);
 	/**
 	 * 해당 커뮤니티에 속해있는 클럽 조회
 	 */
