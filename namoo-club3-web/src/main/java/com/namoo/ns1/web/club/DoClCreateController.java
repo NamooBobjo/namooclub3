@@ -36,7 +36,7 @@ public class DoClCreateController extends HttpServlet{
 		CommunityService cmservice = NamooClubServiceFactory.getInstance().getCommunityService();
 		HttpSession session = req.getSession();
 		
-		String clubName = req.getParameter("clName");
+		int clubId = Integer.parseInt(req.getParameter("clName"));
 		String description = req.getParameter("content");
 		String email = (String)session.getAttribute("loginID");
 		int cmId = Integer.parseInt(req.getParameter("cmId"));
@@ -58,10 +58,7 @@ public class DoClCreateController extends HttpServlet{
 		}
 		System.out.println("1");
 		
-		
-		clservice.registClub(cmId, category, clubName, description, email);
+		clservice.registClub(cmId, category, clubId, description, email);
 		resp.sendRedirect("clList.xhtml?cmId="+cmId);
 	}
-
-	
 }

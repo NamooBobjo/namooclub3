@@ -31,8 +31,8 @@ public class DoClWithdrawController extends HttpServlet {
 		HttpSession session = req.getSession();
 		String email = (String)session.getAttribute("loginID");
 		ClubService clservice = NamooClubServiceFactory.getInstance().getClubService();
-		String clubId = req.getParameter("clubId");
-		String cmId = req.getParameter("cmId");
+		int clubId = Integer.parseInt(req.getParameter("clubId"));
+		int cmId = Integer.parseInt(req.getParameter("cmId"));
 	
 		System.out.println(clubId);
 		

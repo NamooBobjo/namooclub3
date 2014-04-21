@@ -28,8 +28,8 @@ public class DoClRemoveController extends HttpServlet {
 			throws ServletException, IOException {
 		// 
 		
-		String clId = req.getParameter("clId");
-		String cmId = req.getParameter("cmId");
+		int clId = Integer.parseInt(req.getParameter("clId"));
+		int cmId = Integer.parseInt(req.getParameter("cmId"));
 		
 		ClubService service = NamooClubServiceFactory.getInstance().getClubService();
 		service.removeClub(clId);

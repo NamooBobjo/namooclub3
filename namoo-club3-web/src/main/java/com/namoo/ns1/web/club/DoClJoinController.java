@@ -32,11 +32,10 @@ public class DoClJoinController extends HttpServlet {
 		String email = (String) session.getAttribute("loginID");
 		ClubService clservice = NamooClubServiceFactory.getInstance().getClubService();
 		
-		String cmId = req.getParameter("cmId");
-		String clId = req.getParameter("clId");
+		int cmId = Integer.parseInt(req.getParameter("cmId"));
+		int clId = Integer.parseInt(req.getParameter("clId"));
 		
 		clservice.joinAsMember(clId, email);
-		
 		
 		resp.sendRedirect("clList.xhtml?cmId="+cmId);
 	}	

@@ -1,0 +1,19 @@
+<dataset>
+	<socialperson email = "ksy5350@nate.com" userName = "김성용" password="1234"/>
+	<socialperson email = "sss@nate.com" userName = "김성진"  password="1234"/>
+	<socialperson email = "jjj@nate.com" userName = "정효진"  password="1234"/>
+	
+	<community cmId="1" cmName="요리커뮤니티" cmDescription="세계의 요리를 배워요" cmDate="2014-04-10 12:45:20"/>
+	<community cmId="2" cmName="축구커뮤니티" cmDescription="조기축구회" cmDate="2014-04-10 12:45:20"/>
+	
+	<CommunityCategory cmId="1" cgId="1" cgName="한국요리"/> 
+	<CommunityCategory cmId="1" cgId="2" cgName="중화요리"/>
+	
+	<club cmId="1" clid= "1" cgId="1" clName="한식" clDescription="한국요리" clDate="2014-04-10 12:45:20"/>
+	<club cmId="1" clid= "2" cgId="2" clName="중식" clDscription="중화요리" clDate="2014-04-10 12:45:20"/>
+	
+	<Member email= "jjj@nate.com" id="1" kind="1" manager="1" mainManager="0"/>
+	<Member email= "jjj@nate.com" id="1" kind="2" manager="0" mainManager="0"/>
+	<Member email= "sss@nate.com" id="1" kind="1" manager="1" mainManager="1"/>
+	<Member email= "sss@nate.com" id="1" kind="2" manager="0" mainManager="1"/>
+</dataset>
